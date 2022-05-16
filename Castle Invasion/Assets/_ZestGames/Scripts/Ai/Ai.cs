@@ -1,11 +1,14 @@
 using UnityEngine;
 using System;
 using ZestCore.Utility;
+using CastleInvasion;
 
 namespace ZestGames
 {
     public class Ai : MonoBehaviour
     {
+        public enum Side { Left, Right }
+
         #region COMPONENTS
 
         private Animator animator;
@@ -43,6 +46,11 @@ namespace ZestGames
         [SerializeField, Tooltip("Select layers that you want this object to be grounded.")] private LayerMask groundLayerMask;
         [SerializeField, Tooltip("Height that this object will be considered grounded when above groundable layers.")] private float groundedHeightLimit = 0.05f;
 
+        [Header("-- SOLDIER SETUP --")]
+        [SerializeField] private int soldierRowNumber = 0;
+        [SerializeField] private Side currentSide;
+        private BatteringRam _batteringRam;
+
         #region CONTROLS
 
         public bool IsDead { get; private set; }
@@ -71,6 +79,8 @@ namespace ZestGames
             else
                 _currentMovementSpeed = maxMovementSpeed;
 
+            _batteringRam = FindObjectOfType<BatteringRam>();
+
             CharacterTracker.AddAi(this);
 
             OnSetTarget += SetTarget;
@@ -90,11 +100,21 @@ namespace ZestGames
             OnSetTarget -= SetTarget;
         }
 
+        private void Start()
+        {
+            if (currentSide == Side.Left)
+                Target = _batteringRam.Rows[soldierRowNumber].LeftTransform;
+            else if (currentSide == Side.Right)
+                Target = _batteringRam.Rows[soldierRowNumber].RightTransform;
+        }
+
         private void Update()
         {
             if (!IsMoving && IsGrounded && Rigidbody) Rigidbody.velocity = Vector3.zero;
 
             UpdateCurrentMovementSpeed();
+
+            OnSetTarget?.Invoke(Target);
         }
 
         private void UpdateCurrentMovementSpeed()
