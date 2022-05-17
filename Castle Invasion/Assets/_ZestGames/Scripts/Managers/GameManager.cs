@@ -16,6 +16,9 @@ namespace ZestGames
 
         private void Init()
         {
+            Application.targetFrameRate = 240;
+            //DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(1250,5);
+
             GameState = Enums.GameState.WaitingToStart;
             GameEnd = Enums.GameEnd.None;
 

@@ -8,6 +8,7 @@ namespace ZestGames
     public class Ai : MonoBehaviour
     {
         public enum Side { Left, Right }
+        private bool _firstInitialization;
 
         #region COMPONENTS
 
@@ -56,7 +57,7 @@ namespace ZestGames
         public bool IsDead { get; private set; }
         public Transform Target { get; private set; }
 
-        public bool CanMove => GameManager.GameState == Enums.GameState.Started;
+        public bool CanMove => Target != null;
         public bool IsMoving => Movement.IsMoving;
         public bool IsGrounded => Physics.Raycast(Collider.bounds.center, Vector3.down, Collider.bounds.extents.y + groundedHeightLimit, groundLayerMask);
         public float CurrentMovementSpeed => _currentMovementSpeed;
@@ -72,6 +73,7 @@ namespace ZestGames
 
         private void Init()
         {
+            _firstInitialization = true;
             IsDead = false;
             Target = null;
             if (useAcceleration)
@@ -82,11 +84,20 @@ namespace ZestGames
             _batteringRam = FindObjectOfType<BatteringRam>();
 
             CharacterTracker.AddAi(this);
+            
+            AnimationController.Init(this);
+            Movement.Init(this);
 
             OnSetTarget += SetTarget;
 
-            AnimationController.Init(this);
-            Movement.Init(this);
+            Delayer.DoActionAfterDelay(this, 1f, () => {
+                if (currentSide == Side.Left)
+                    Target = _batteringRam.Rows[soldierRowNumber].LeftTransform;
+                else if (currentSide == Side.Right)
+                    Target = _batteringRam.Rows[soldierRowNumber].RightTransform;
+
+                OnSetTarget?.Invoke(Target);
+            });
         }
 
         private void OnEnable()
@@ -100,21 +111,14 @@ namespace ZestGames
             OnSetTarget -= SetTarget;
         }
 
-        private void Start()
-        {
-            if (currentSide == Side.Left)
-                Target = _batteringRam.Rows[soldierRowNumber].LeftTransform;
-            else if (currentSide == Side.Right)
-                Target = _batteringRam.Rows[soldierRowNumber].RightTransform;
-        }
-
         private void Update()
         {
             if (!IsMoving && IsGrounded && Rigidbody) Rigidbody.velocity = Vector3.zero;
 
             UpdateCurrentMovementSpeed();
 
-            OnSetTarget?.Invoke(Target);
+            if (!_firstInitialization)
+                OnSetTarget?.Invoke(Target);
         }
 
         private void UpdateCurrentMovementSpeed()
@@ -142,5 +146,7 @@ namespace ZestGames
             Target = transform;
             OnMove?.Invoke();
         }
+
+        public void CancelFirstInitialization() => _firstInitialization = false;
     }
 }

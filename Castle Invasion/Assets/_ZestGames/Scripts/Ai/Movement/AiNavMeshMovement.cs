@@ -10,6 +10,10 @@ namespace ZestGames
         private Ai _ai;
         private Transform _currentTarget;
         private NavMeshAgent _agent;
+        private bool _targetReached = false;
+
+        [Header("-- MOVEMENT SETUP --")]
+        [SerializeField] private bool updateRotation = true;
 
         public bool IsMoving => _agent.velocity.magnitude > 0.05f;
         public bool IsGrounded => _ai.IsGrounded;
@@ -20,6 +24,8 @@ namespace ZestGames
             _currentTarget = ai.Target;
             _agent = GetComponent<NavMeshAgent>();
             _agent.speed = _ai.CurrentMovementSpeed;
+            _agent.updateRotation = updateRotation;
+            transform.rotation = Quaternion.identity;
 
             _ai.OnSetTarget += SetTarget;
         }
@@ -39,11 +45,15 @@ namespace ZestGames
         {
             _agent.SetDestination(_currentTarget.position);
 
-            if (Operation.IsTargetReached(transform, _currentTarget.position))
+            if (Operation.IsTargetReached(transform, _currentTarget.position, 2) && !_targetReached)
             {
+                _targetReached = true;
+                _ai.CancelFirstInitialization();
                 _currentTarget = null;
                 _ai.OnIdle?.Invoke();
             }
+            else
+                _targetReached = false;
         }
 
         private void SetTarget(Transform newTarget)
