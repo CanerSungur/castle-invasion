@@ -45,20 +45,23 @@ namespace ZestGames
         {
             _agent.SetDestination(_currentTarget.position);
 
-            if (Operation.IsTargetReached(transform, _currentTarget.position, 2) && !_targetReached)
+            if (Operation.IsTargetReached(transform, _currentTarget.position, 0.01f) && !_targetReached)
             {
+                _ai.IsMoving = false;
+
                 _targetReached = true;
                 _ai.CancelFirstInitialization();
                 _currentTarget = null;
-                _ai.OnIdle?.Invoke();
+                //_ai.OnIdle?.Invoke();
             }
             else
-                _targetReached = false;
+                _ai.IsMoving = true;
         }
 
         private void SetTarget(Transform newTarget)
         {
             _currentTarget = newTarget;
+            _targetReached = false;
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using ZestCore.Utility;
+using ZestGames;
 
 namespace CastleInvasion
 {
@@ -11,6 +12,11 @@ namespace CastleInvasion
         [SerializeField] private GameObject rowPrefab;
         [SerializeField] private Door door;
         private List<BatteringRamRow> rows = new List<BatteringRamRow>();
+        
+        [Header("-- STRUGGLE SETUP --")]
+        private int _pullCount = 0;
+        private int _struggleLimit = 10;
+        private int _pullMax = 20;
 
         #region Components
         private Rigidbody _rigidbody;
@@ -26,6 +32,7 @@ namespace CastleInvasion
         public Door Door => door;
         public Rigidbody Rigidbody => _rigidbody;
         public BatteringRamMovement Movement => _movement;
+        public int StrugglePullCount => _pullMax - _struggleLimit;
         #endregion
 
         private void Awake()
@@ -45,11 +52,23 @@ namespace CastleInvasion
                 
                 row.Init(this);
             }
+
+            _pullCount = 0;
+
+            PlayerEvents.OnRamPulled += IncreasePullCount;
+            PlayerEvents.OnRamReleased += ResetPullCount;
+            PlayerEvents.OnStartStruggle += StartStruggle;
+            PlayerEvents.OnStopStruggle += StopStruggle;
         }
 
         private void OnDisable()
         {
             rows.Clear();
+
+            PlayerEvents.OnRamPulled -= IncreasePullCount;
+            PlayerEvents.OnRamReleased -= ResetPullCount;
+            PlayerEvents.OnStartStruggle -= StartStruggle;
+            PlayerEvents.OnStopStruggle -= StopStruggle;
         }
 
         public void Hit()
@@ -70,6 +89,34 @@ namespace CastleInvasion
                 transform.localScale = Vector3.one;
                 Movement.ResetPulling();
             });
+        }
+
+        private void StartStruggle()
+        {
+            
+        }
+
+        private void StopStruggle()
+        {
+
+        }
+
+        private void IncreasePullCount()
+        {
+            _pullCount++;
+            if (_pullCount >= _struggleLimit)
+                PlayerEvents.OnStartStruggle?.Invoke();
+            if (_pullCount == _pullMax)
+            {
+                GameEvents.OnGameEnd?.Invoke(Enums.GameEnd.Fail);
+                PlayerEvents.OnStopStruggle?.Invoke();
+            }
+        }
+
+        private void ResetPullCount()
+        {
+            _pullCount = 0;
+            PlayerEvents.OnStopStruggle?.Invoke();
         }
     }
 }

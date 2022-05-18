@@ -58,9 +58,10 @@ namespace ZestGames
         public Transform Target { get; private set; }
 
         public bool CanMove => Target != null;
-        public bool IsMoving => Movement.IsMoving;
+        public bool IsMoving { get; set; }
         public bool IsGrounded => Physics.Raycast(Collider.bounds.center, Vector3.down, Collider.bounds.extents.y + groundedHeightLimit, groundLayerMask);
         public float CurrentMovementSpeed => _currentMovementSpeed;
+        public BatteringRam BatteringRam => _batteringRam;
 
         #endregion
 
@@ -147,6 +148,10 @@ namespace ZestGames
             OnMove?.Invoke();
         }
 
-        public void CancelFirstInitialization() => _firstInitialization = false;
+        public void CancelFirstInitialization()
+        {
+            _firstInitialization = false;
+            //AnimationController.StartedPulling();
+        }
     }
 }

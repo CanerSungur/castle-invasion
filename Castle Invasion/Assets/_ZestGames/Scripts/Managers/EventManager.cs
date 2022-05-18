@@ -12,7 +12,7 @@ namespace ZestGames
 
     public static class PlayerEvents 
     {
-        public static Action OnStartStruggle, OnStopStruggle;
+        public static Action OnStartStruggle, OnStopStruggle, OnRamPulled, OnRamReleased, OnHitWall;
     }
 
     public static class UiEvents

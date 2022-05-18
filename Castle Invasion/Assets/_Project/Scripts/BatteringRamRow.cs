@@ -29,6 +29,7 @@ namespace CastleInvasion
             {
                 _batteringRam.Hit();
                 door.GetHit();
+                PlayerEvents.OnHitWall?.Invoke();
                 CameraManager.OnShakeCam?.Invoke();
             }
         }
