@@ -34,6 +34,9 @@ namespace ZestGames
         private IAiMovement movement;
         public IAiMovement Movement => movement == null ? movement = GetComponent<IAiMovement>() : movement;
 
+        private AiStaminaController staminaController;
+        public AiStaminaController StaminaController => staminaController == null ? staminaController = GetComponent<AiStaminaController>() : staminaController;
+
         #endregion
 
         [Header("-- MOVEMENT SETUP --")]
@@ -57,17 +60,18 @@ namespace ZestGames
         public bool IsDead { get; private set; }
         public Transform Target { get; private set; }
 
-        public bool CanMove => Target != null;
+        public bool CanMove => Target != null && GameManager.GameState != Enums.GameState.GameEnded;
         public bool IsMoving { get; set; }
         public bool IsGrounded => Physics.Raycast(Collider.bounds.center, Vector3.down, Collider.bounds.extents.y + groundedHeightLimit, groundLayerMask);
         public float CurrentMovementSpeed => _currentMovementSpeed;
         public BatteringRam BatteringRam => _batteringRam;
+        public Side CurrentSide => currentSide;
 
         #endregion
 
         #region EVENTS
 
-        public Action OnIdle, OnMove, OnDie;
+        public Action OnIdle, OnMove, OnDie, OnWin;
         public Action<Transform> OnSetTarget;
 
         #endregion
@@ -88,8 +92,10 @@ namespace ZestGames
             
             AnimationController.Init(this);
             Movement.Init(this);
+            StaminaController.Init(this);
 
             OnSetTarget += SetTarget;
+            GameEvents.OnGameEnd += HandleGameEnd;
 
             Delayer.DoActionAfterDelay(this, 1f, () => {
                 if (currentSide == Side.Left)
@@ -110,8 +116,9 @@ namespace ZestGames
         {
             CharacterTracker.RemoveAi(this);
             OnSetTarget -= SetTarget;
+            GameEvents.OnGameEnd -= HandleGameEnd;
         }
-
+                
         private void Update()
         {
             if (!IsMoving && IsGrounded && Rigidbody) Rigidbody.velocity = Vector3.zero;
@@ -146,6 +153,18 @@ namespace ZestGames
 
             Target = transform;
             OnMove?.Invoke();
+        }
+
+        private void HandleGameEnd(Enums.GameEnd gameEnd)
+        {
+            if (gameEnd == Enums.GameEnd.Fail)
+            {
+                OnDie?.Invoke();
+                Rigidbody.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(-1f, 1f)) * 5, ForceMode.Impulse);
+                transform.rotation = Quaternion.Euler(transform.rotation.x, UnityEngine.Random.Range(0f, 180f), transform.rotation.z);
+            }
+            else if (gameEnd == Enums.GameEnd.Success)
+                OnWin?.Invoke();
         }
 
         public void CancelFirstInitialization()

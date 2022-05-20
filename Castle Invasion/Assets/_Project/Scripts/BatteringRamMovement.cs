@@ -81,7 +81,7 @@ namespace CastleInvasion
         {
             Resetting = true;
             transform.DOKill();
-            transform.DOMoveZ(_targetPullPoint, 3f).OnComplete(() => {
+            transform.DOMoveZ(_targetPullPoint, 2f).OnComplete(() => {
                 _pulling = _released = Resetting = false;
             });
         }
