@@ -27,9 +27,9 @@ namespace ZestGames
         }
 
         private void UpdateLevelText(int level) => levelText.text = $"Level {level}";
-        private void UpdateMoneyText(int money)
+        private void UpdateMoneyText(float money)
         {
-            collectableText.text = money.ToString();
+            collectableText.text = ((int)money).ToString();
             DOTweenUtils.ShakeTransform(transform, 0.25f);
         }
     }

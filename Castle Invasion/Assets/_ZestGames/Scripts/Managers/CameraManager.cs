@@ -22,10 +22,15 @@ namespace ZestGames
 
         [Header("-- STRUGGLE SETUP --")]
         private bool _struggleStarted = false;
-        private float _struggleShakeAmplitude = 0.1f;
+        private float _struggleShakeAmplitude = 0.25f;
         private float _struggleShakeFrequencyRate, _currentStruggleShakeFrequency;
         private readonly float _minStruggleShakeFrequency = 0f;
-        private readonly float _maxStruggleShakeFrequency = 50f;
+        private readonly float _maxStruggleShakeFrequency = 100f;
+
+        // Camera position setup
+        private readonly float _defaultCamDistance = -12f;
+        private readonly float _camDistanceIncreaseRate = -0.5f;
+        private float _currentCamDistance;
 
         public static Action OnShakeCam;
 
@@ -35,6 +40,11 @@ namespace ZestGames
 
             _gameplayCMTransposer = gameplayCM.GetCinemachineComponent<CinemachineTransposer>();
             _gameplayCMBasicPerlin = gameplayCM.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+            // cam distance
+            UpdateCameraPosition();
+
+            // shake
             _gameplayCMBasicPerlin.m_AmplitudeGain = 0f;
             _shakeTimer = _shakeDuration;
 
@@ -42,7 +52,7 @@ namespace ZestGames
             gameplayCM.Priority = 1;
 
             _currentStruggleShakeFrequency = _minStruggleShakeFrequency;
-            _struggleShakeFrequencyRate =  (_maxStruggleShakeFrequency - _minStruggleShakeFrequency) / _batteringRam.StrugglePullCount;
+            _struggleShakeFrequencyRate = 5;
         }
 
         private void Start()
@@ -65,6 +75,13 @@ namespace ZestGames
         {
             ShakeCamForAWhile();
             StruggleCam();
+        }
+
+        private void UpdateCameraPosition()
+        {
+            // Update camera according to ram size
+            _currentCamDistance = _defaultCamDistance + ((DataManager.SizeLevel - 1) * _camDistanceIncreaseRate);
+            _gameplayCMTransposer.m_FollowOffset = new Vector3(_gameplayCMTransposer.m_FollowOffset.x, _gameplayCMTransposer.m_FollowOffset.y, _currentCamDistance);
         }
 
         private void ShakeCamForAWhile()

@@ -1,5 +1,6 @@
 using UnityEngine;
 using ZestCore.Utility;
+using CastleInvasion;
 
 namespace ZestGames
 {
@@ -10,9 +11,12 @@ namespace ZestGames
         [Header("-- REFERENCES --")]
         [SerializeField] private TouchToStart touchToStart;
         [SerializeField] private Hud hud;
+        [SerializeField] private GameObject hudLevelObj;
+        [SerializeField] private GameObject hudMoneyObj;
         [SerializeField] private LevelFail levelFail;
         [SerializeField] private LevelSuccess levelSuccess;
         [SerializeField] private SettingsUi settings;
+        [SerializeField] private UpgradeCanvas upgrade;
 
         [Header("-- UI DELAY SETUP --")]
         [SerializeField, Tooltip("The delay in seconds between the game is won and the win screen is loaded.")]
@@ -29,10 +33,16 @@ namespace ZestGames
             levelSuccess.Init(this);
 
             touchToStart.gameObject.SetActive(true);
-            hud.gameObject.SetActive(false);
+            upgrade.gameObject.SetActive(true);
+
             levelFail.gameObject.SetActive(false);
             levelSuccess.gameObject.SetActive(false);
             settings.gameObject.SetActive(false);
+
+            hud.gameObject.SetActive(true);
+            hudLevelObj.SetActive(false);
+            hudMoneyObj.SetActive(true);
+            Delayer.DoActionAfterDelay(this, 0.2f, () => UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney));
 
             GameEvents.OnGameStart += GameStarted;
             GameEvents.OnGameEnd += GameEnded;
@@ -53,8 +63,11 @@ namespace ZestGames
         private void GameStarted()
         {
             touchToStart.gameObject.SetActive(false);
-            hud.gameObject.SetActive(true);
+            upgrade.gameObject.SetActive(false);
             settings.gameObject.SetActive(true);
+            
+            hud.gameObject.SetActive(true);
+            hudLevelObj.SetActive(true);
         }
 
         private void GameEnded(Enums.GameEnd gameEnd)

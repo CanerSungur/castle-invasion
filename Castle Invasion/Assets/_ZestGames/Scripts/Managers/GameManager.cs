@@ -31,7 +31,7 @@ namespace ZestGames
             _uiManager = GetComponent<UiManager>();
             _uiManager.Init(this);
 
-            UiEvents.OnUpdateCollectableText?.Invoke(_dataManager.TotalMoney);
+            UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney);
             UiEvents.OnUpdateLevelText?.Invoke(LevelHandler.Level);
         }
 

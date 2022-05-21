@@ -11,6 +11,10 @@ namespace ZestGames
         public static int GetSceneBuildIndexToBeLoaded()
         {
             Level = PlayerPrefs.GetInt("Level", 1);
+            #region For Incrementals
+            PlayerPrefs.SetInt("ResetStaminaForNewLevel", 0);
+            PlayerPrefs.Save();
+            #endregion
 
             // Uncomment this and run game once to reset level.
             //DeleteLevelData();
@@ -29,6 +33,7 @@ namespace ZestGames
         {
             Level++;
             PlayerPrefs.SetInt("Level", Level);
+            PlayerPrefs.SetInt("ResetStaminaForNewLevel", 1);
             PlayerPrefs.Save();
         }
     }

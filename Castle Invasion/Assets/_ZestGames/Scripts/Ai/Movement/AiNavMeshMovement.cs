@@ -30,16 +30,20 @@ namespace ZestGames
 
             _ai.OnSetTarget += SetTarget;
             _ai.OnDie += () => _agent.enabled = false;
+            _ai.OnWin += Cheer;
         }
 
         private void OnDisable()
         {
             _ai.OnSetTarget -= SetTarget;
             _ai.OnDie -= () => _agent.enabled = false;
+            _ai.OnWin -= Cheer;
         }
 
         private void Update()
         {
+            if (GameManager.GameEnd == Enums.GameEnd.Success) return;
+
             if (!_ai.CanMove || !_currentTarget) return;
             Motor();
         }
@@ -65,6 +69,13 @@ namespace ZestGames
         {
             _currentTarget = newTarget;
             _targetReached = false;
+        }
+
+        private void Cheer()
+        {
+            _agent.speed = _ai.CurrentMovementSpeed * 0.5f;
+            _agent.SetDestination(_currentTarget.position + new Vector3(Random.Range(-2f, 2f), 0f, (Random.Range(-3f, 3f))));
+            transform.rotation = Quaternion.Euler(0f, Random.Range(-90f, 90f), 0f);
         }
     }
 }

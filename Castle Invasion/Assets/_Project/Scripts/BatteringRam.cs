@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using ZestCore.Utility;
 using ZestGames;
 
@@ -12,11 +11,22 @@ namespace CastleInvasion
         [SerializeField] private GameObject rowPrefab;
         [SerializeField] private Door door;
         private List<BatteringRamRow> rows = new List<BatteringRamRow>();
-        
+        private List<Ai> leftRowSoldiers = new List<Ai>();
+        private List<Ai> rightRowSoldiers = new List<Ai>();
+
+        [Header("-- DAMAGE SETUP --")]
+        private int _damage;
+
         [Header("-- STRUGGLE SETUP --")]
-        private int _pullCount = 0;
-        private int _struggleLimit = 10;
-        private int _pullMax = 20;
+        private int _pullStaminaCost, _struggleLimit, _pullMaxStamina;
+        private bool _firstHitHappened = false;
+        public int StrugglePullCount { get; private set; }
+        public int PullCount { get; private set; }
+
+        // Struggle after first hit
+        private readonly float _defaultLimitDecreaseRate = 0.5f;
+        private readonly float _limitDecreaseRate = 0.1f;
+        private int _hitCount = 0;
 
         #region Components
         private Rigidbody _rigidbody;
@@ -32,10 +42,10 @@ namespace CastleInvasion
         public Door Door => door;
         public Rigidbody Rigidbody => _rigidbody;
         public BatteringRamMovement Movement => _movement;
-        public int StrugglePullCount => _pullMax - _struggleLimit;
+        public int Damage => _damage;
         #endregion
 
-        private void Awake()
+        private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
 
@@ -44,21 +54,17 @@ namespace CastleInvasion
             _animationController = GetComponent<BatteringRamAnimController>();
             _animationController.Init(this);
 
-            for (int i = 0; i < 6; i++)
-            {
-                BatteringRamRow row = Instantiate(rowPrefab, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
-                row.transform.parent = transform;
-                row.transform.localPosition = new Vector3(0, 0, -i * 1f);
-                
-                row.Init(this);
-            }
+            SetupRam();
 
-            _pullCount = 0;
+            _pullStaminaCost = DataManager.PullStaminaCost;
+            _struggleLimit = DataManager.StruggleLimit;
+            _pullMaxStamina = (int)DataManager.MaxStamina;
+            StrugglePullCount = PullCount = 0;
 
             PlayerEvents.OnRamPulled += IncreasePullCount;
             PlayerEvents.OnRamReleased += ResetPullCount;
-            PlayerEvents.OnStartStruggle += StartStruggle;
-            PlayerEvents.OnStopStruggle += StopStruggle;
+            PlayerEvents.OnSetCurrentStamina += UpdateLimits;
+            PlayerEvents.OnSetCurrentSize += AddRow;
         }
 
         private void OnDisable()
@@ -67,46 +73,93 @@ namespace CastleInvasion
 
             PlayerEvents.OnRamPulled -= IncreasePullCount;
             PlayerEvents.OnRamReleased -= ResetPullCount;
-            PlayerEvents.OnStartStruggle -= StartStruggle;
-            PlayerEvents.OnStopStruggle -= StopStruggle;
+            PlayerEvents.OnSetCurrentStamina -= UpdateLimits;
+            PlayerEvents.OnSetCurrentSize -= AddRow;
         }
 
-        public void Hit()
+        public int Hit()
         {
-            Shake();
+            UpdateLimits();
+            _hitCount++;
+
+            ResetPull();
+            CalculateDamage();
+            PullCount = 0;
+            return _damage;
         }
 
-        private void Shake()
+        #region Setup Functions
+
+        private void SetupRam()
         {
-            transform.DOKill();
+            for (int i = 0; i < DataManager.CurrentSize; i++)
+            {
+                BatteringRamRow row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRow, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+                //BatteringRamRow row = Instantiate(rowPrefab, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+                row.transform.parent = transform;
+                row.transform.localPosition = new Vector3(0, 0, -i * 1f);
 
-            transform.DOShakePosition(.35f, .1f, 1);
-            transform.DOShakeScale(.35f, .2f, 1);
-            transform.DOShakeRotation(.35f, .1f, 1);
+                row.Init(this);
 
-            Delayer.DoActionAfterDelay(this, 1f, () => {
+                AddSoldiers();
+            }
+        }
+
+        private void AddRow()
+        {
+            BatteringRamRow row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRow, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+            row.transform.parent = transform;
+            row.transform.localPosition = new Vector3(0, 0, -(DataManager.CurrentSize - 1));
+            row.Init(this);
+
+            AddSoldiers();
+        }
+
+        private void AddSoldiers()
+        {
+            // Setup left row soldier
+            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, Vector3.zero, Quaternion.identity).GetComponent<Ai>();
+            leftAi.transform.parent = null;
+            if (!leftRowSoldiers.Contains(leftAi))
+            {
+                leftRowSoldiers.Add(leftAi);
+                leftAi.SetSoldierRowNumber(leftRowSoldiers.IndexOf(leftAi));
+            }
+
+            // Setup right row soldier
+            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, Vector3.zero, Quaternion.identity).GetComponent<Ai>();
+            rightAi.transform.parent = null;
+            if (!rightRowSoldiers.Contains(rightAi))
+            {
+                rightRowSoldiers.Add(rightAi);
+                rightAi.SetSoldierRowNumber(rightRowSoldiers.IndexOf(rightAi));
+            }
+        }
+
+        #endregion
+
+        private void CalculateDamage() => _damage = DataManager.CurrentDamage * PullCount;
+
+        private void ResetPull()
+        {
+            Delayer.DoActionAfterDelay(this, 1f, () =>
+            {
                 transform.rotation = Quaternion.identity;
                 transform.localScale = Vector3.one;
                 Movement.ResetPulling();
             });
         }
 
-        private void StartStruggle()
-        {
-            
-        }
-
-        private void StopStruggle()
-        {
-
-        }
-
         private void IncreasePullCount()
         {
-            _pullCount++;
-            if (_pullCount >= _struggleLimit)
+            PullCount++;
+            _pullMaxStamina -= _pullStaminaCost;
+            if (_pullMaxStamina <= _struggleLimit)
+            {
                 PlayerEvents.OnStartStruggle?.Invoke();
-            if (_pullCount == _pullMax)
+                StrugglePullCount++;
+            }
+            if (_pullMaxStamina <= 0)
             {
                 GameEvents.OnGameEnd?.Invoke(Enums.GameEnd.Fail);
                 PlayerEvents.OnStopStruggle?.Invoke();
@@ -115,8 +168,25 @@ namespace CastleInvasion
 
         private void ResetPullCount()
         {
-            _pullCount = 0;
+            _pullStaminaCost = DataManager.PullStaminaCost;
+            StrugglePullCount = 0;
+
             PlayerEvents.OnStopStruggle?.Invoke();
+        }
+
+        private void UpdateLimits()
+        {
+            if (_defaultLimitDecreaseRate > (_limitDecreaseRate * _hitCount))
+            {
+                _struggleLimit = (int)(DataManager.StruggleLimit * (_defaultLimitDecreaseRate - (_limitDecreaseRate * _hitCount)));
+                _pullMaxStamina = (int)(DataManager.MaxStamina * (_defaultLimitDecreaseRate - (_limitDecreaseRate * _hitCount)));
+                PlayerEvents.OnDecreaseAiLimits?.Invoke(_hitCount);
+            }
+        }
+
+        private void UpdateStamina()
+        {
+           
         }
     }
 }

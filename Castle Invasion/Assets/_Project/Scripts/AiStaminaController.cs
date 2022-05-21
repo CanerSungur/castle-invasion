@@ -30,14 +30,18 @@ namespace CastleInvasion
             _currentRimValue = 0f;
             _currentRimSize = 0f;
 
+            UpdateRendererChangeTime();
+
             PlayerEvents.OnStartStruggle += StartStruggle;
             PlayerEvents.OnStopStruggle += StopStruggle;
+            PlayerEvents.OnDecreaseAiLimits += DecreaseAiLimits;
         }
 
         private void OnDisable()
         {
             PlayerEvents.OnStartStruggle -= StartStruggle;
             PlayerEvents.OnStopStruggle -= StopStruggle;
+            PlayerEvents.OnDecreaseAiLimits -= DecreaseAiLimits;
         }
 
         private void StartStruggle()
@@ -91,6 +95,18 @@ namespace CastleInvasion
                 _renderer.material.SetFloat("_FlatRimSize", r);
                 _currentRimSize = r;
             });
+        }
+
+        private void UpdateRendererChangeTime()
+        {
+            rendererChangeTime = (DataManager.StruggleLimit / DataManager.PullStaminaCost) * 0.75f;
+            Debug.Log(rendererChangeTime);
+        }
+
+        private void DecreaseAiLimits(int hitCount)
+        {
+            if (hitCount > 0)
+                rendererChangeTime = (DataManager.StruggleLimit / DataManager.PullStaminaCost) * 0.75f / hitCount;
         }
     }
 }

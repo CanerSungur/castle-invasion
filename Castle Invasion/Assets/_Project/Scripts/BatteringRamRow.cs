@@ -36,12 +36,13 @@ namespace CastleInvasion
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent(out Door door) && GameManager.GameState != Enums.GameState.GameEnded)
+            if (collision.gameObject.TryGetComponent(out Door door) && !door.GotHit && GameManager.GameState != Enums.GameState.GameEnded)
             {
-                _batteringRam.Hit();
-                door.GetHit();
+                door.GetHit(_batteringRam.Hit());
                 PlayerEvents.OnHitWall?.Invoke();
                 CameraManager.OnShakeCam?.Invoke();
+                CollectableEvents.OnCollect?.Invoke(DataManager.MoneyValue * _batteringRam.Damage);
+                UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney);
             }
         }
 

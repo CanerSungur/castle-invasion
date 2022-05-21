@@ -5,7 +5,7 @@ namespace ZestGames
     public class TapInput : MonoBehaviour
     {
         private float _startTime;
-        private float _delay = 0.5f;
+        private float _delay = 1f;
 
         public bool CanTap => GameManager.GameState == Enums.GameState.Started && Time.time > _startTime + _delay;
 
@@ -21,9 +21,11 @@ namespace ZestGames
 
         private void Update()
         {
-            if (!CanTap) return;
-
-            if (Input.GetMouseButtonDown(0)) InputEvents.OnTapHappened?.Invoke();
+            if (Input.GetMouseButtonDown(0) && CanTap)
+            {
+                InputEvents.OnTapHappened?.Invoke();
+                _startTime = Time.time;
+            }
         }
     }
 }

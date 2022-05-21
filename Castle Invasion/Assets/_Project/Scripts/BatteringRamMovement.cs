@@ -9,12 +9,16 @@ namespace CastleInvasion
         private BatteringRam _batteringRam;
 
         private float _timer;
-        private float _countdown = 1f;
+        private float _countdown = 1.2f;
         private bool _pulling, _released;
 
         private float _startingPoint;
         private float _targetPullPoint;
         private float _pullRate = 0.1f;
+
+        private float _currentPullTime;
+        private readonly float _defaultPullTime = 0.5f;
+        private readonly float _struggledPullTime = 1f;
 
         public bool CanRelease => _pulling && !_released && GameManager.GameState == Enums.GameState.Started;
         public bool CanPull => !_released && GameManager.GameState == Enums.GameState.Started;
@@ -25,6 +29,7 @@ namespace CastleInvasion
         public void Init(BatteringRam batteringRam)
         {
             _batteringRam = batteringRam;
+            _currentPullTime = _defaultPullTime;
 
             _startingPoint = transform.position.z;
             _targetPullPoint = _startingPoint;
@@ -32,11 +37,15 @@ namespace CastleInvasion
             Resetting = false;
 
             InputEvents.OnTapHappened += Move;
+            PlayerEvents.OnStartStruggle += StruggledPullTime;
+            PlayerEvents.OnStopStruggle += DefaultPullTime;
         }
 
         private void OnDisable()
         {
             InputEvents.OnTapHappened -= Move;
+            PlayerEvents.OnStartStruggle -= StruggledPullTime;
+            PlayerEvents.OnStopStruggle -= DefaultPullTime;
         }
 
         private void Update()
@@ -60,8 +69,8 @@ namespace CastleInvasion
             _targetPullPoint -= _pullRate;
             //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - _pullRate);
 
-            transform.DOKill();
-            transform.DOMoveZ(_targetPullPoint, 0.5f);
+            //transform.DOKill();
+            transform.DOMoveZ(_targetPullPoint, _currentPullTime);
             PlayerEvents.OnRamPulled?.Invoke();
         }
 
@@ -72,17 +81,31 @@ namespace CastleInvasion
             _released = true;
             _targetPullPoint = _startingPoint;
 
-            transform.DOKill();
-            transform.DOMoveZ(_batteringRam.Door.transform.position.z, 2f);
+            //transform.DOKill();
+            transform.DOMoveZ(_batteringRam.Door.transform.position.z - 0.5f, 2f);
             PlayerEvents.OnRamReleased?.Invoke();
         }
 
         public void ResetPulling()
         {
             Resetting = true;
-            transform.DOKill();
+            //transform.DOKill();
             transform.DOMoveZ(_targetPullPoint, 2f).OnComplete(() => {
                 _pulling = _released = Resetting = false;
+                DoorEvents.OnResetDoor?.Invoke();
+            });
+        }
+
+        private void DefaultPullTime()
+        {
+            DOVirtual.Float(_currentPullTime, _defaultPullTime, 1f, r => {
+                _currentPullTime = r;
+            });
+        }
+        private void StruggledPullTime()
+        {
+            DOVirtual.Float(_currentPullTime, _struggledPullTime, 1f, r => {
+                _currentPullTime = r;
             });
         }
     }

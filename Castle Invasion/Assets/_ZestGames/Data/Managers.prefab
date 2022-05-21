@@ -61,6 +61,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DeleteAllData: 0
+  struggleRate: 0.5
+  pullStaminaCost: 10
 --- !u!114 &5491084403859615913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,8 +101,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   touchToStart: {fileID: 0}
   hud: {fileID: 0}
+  hudLevelObj: {fileID: 0}
+  hudMoneyObj: {fileID: 0}
   levelFail: {fileID: 0}
   levelSuccess: {fileID: 0}
+  settings: {fileID: 0}
+  upgrade: {fileID: 0}
   successScreenDelay: 1
   failScreenDelay: 1
 --- !u!114 &1124688366865923144

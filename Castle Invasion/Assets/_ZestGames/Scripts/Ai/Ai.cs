@@ -51,8 +51,8 @@ namespace ZestGames
         [SerializeField, Tooltip("Height that this object will be considered grounded when above groundable layers.")] private float groundedHeightLimit = 0.05f;
 
         [Header("-- SOLDIER SETUP --")]
-        [SerializeField] private int soldierRowNumber = 0;
         [SerializeField] private Side currentSide;
+        private int _soldierRowNumber = 0;
         private BatteringRam _batteringRam;
 
         #region CONTROLS
@@ -99,9 +99,9 @@ namespace ZestGames
 
             Delayer.DoActionAfterDelay(this, 1f, () => {
                 if (currentSide == Side.Left)
-                    Target = _batteringRam.Rows[soldierRowNumber].LeftTransform;
+                    Target = _batteringRam.Rows[_soldierRowNumber].LeftTransform;
                 else if (currentSide == Side.Right)
-                    Target = _batteringRam.Rows[soldierRowNumber].RightTransform;
+                    Target = _batteringRam.Rows[_soldierRowNumber].RightTransform;
 
                 OnSetTarget?.Invoke(Target);
             });
@@ -118,7 +118,7 @@ namespace ZestGames
             OnSetTarget -= SetTarget;
             GameEvents.OnGameEnd -= HandleGameEnd;
         }
-                
+
         private void Update()
         {
             if (!IsMoving && IsGrounded && Rigidbody) Rigidbody.velocity = Vector3.zero;
@@ -172,5 +172,7 @@ namespace ZestGames
             _firstInitialization = false;
             //AnimationController.StartedPulling();
         }
+
+        public void SetSoldierRowNumber(int rowNumber) => _soldierRowNumber = rowNumber;
     }
 }

@@ -1,4 +1,6 @@
 using UnityEngine;
+using DG.Tweening;
+using System;
 
 namespace ZestGames
 {
@@ -20,8 +22,15 @@ namespace ZestGames
         private readonly int _winID = Animator.StringToHash("Win");
         // floats
         private readonly int _runSpeedID = Animator.StringToHash("RunSpeed");
+        private readonly int _pullSpeedID = Animator.StringToHash("PullSpeed");
+        // layer
+        private readonly int _carryingLayer = 1;
 
         #endregion
+
+        private float _currentPullSpeed;
+        private readonly float _defaultPullSpeed = 1f;
+        private readonly float _struggledPullSPeed = 0.75f;
 
         private bool _ramIsReleased => _ai.BatteringRam.Movement.IsReleased;
         private bool _ramIsResetting => _ai.BatteringRam.Movement.Resetting;
@@ -30,6 +39,9 @@ namespace ZestGames
         {
             _ai = ai;
             _ai.Animator.SetBool(_rightID, _ai.CurrentSide == Ai.Side.Right ? true : false);
+            _currentPullSpeed = _defaultPullSpeed;
+            _ai.Animator.SetLayerWeight(_carryingLayer, 1f);
+            DefaultPullSpeed();
 
             Idle();
 
@@ -39,6 +51,8 @@ namespace ZestGames
             _ai.OnWin += Win;
             PlayerEvents.OnRamPulled += Pull;
             PlayerEvents.OnHitWall += HitWall;
+            PlayerEvents.OnStartStruggle += StruggledPullSpeed;
+            PlayerEvents.OnStopStruggle += DefaultPullSpeed;
         }
 
         private void OnDisable()
@@ -49,10 +63,14 @@ namespace ZestGames
             _ai.OnWin -= Win;
             PlayerEvents.OnRamPulled -= Pull;
             PlayerEvents.OnHitWall -= HitWall;
+            PlayerEvents.OnStartStruggle -= StruggledPullSpeed;
+            PlayerEvents.OnStopStruggle -= DefaultPullSpeed;
         }
 
         private void Update()
         {
+            if (GameManager.GameEnd == Enums.GameEnd.Success) return;
+
             //if (_ai.BatteringRam.Movement.IsBeingPulled) return;
             //if (_ramIsResetting)
             //    Pull();
@@ -80,12 +98,32 @@ namespace ZestGames
 
         private void Die()
         {
+            _ai.Animator.SetLayerWeight(_carryingLayer, 0f);
+
             _ai.Animator.SetBool(_runID, false);
             _ai.Animator.SetBool(_dieID, true);
         }
 
-        private void Win() => _ai.Animator.SetTrigger(_winID);
+        private void Win()
+        { 
+            _ai.Animator.SetLayerWeight(_carryingLayer, 0f); 
+            _ai.Animator.SetTrigger(_winID);
+        }
         private void Pull() => _ai.Animator.SetTrigger(_pullID);
         private void HitWall() => _ai.Animator.SetTrigger(_hitWallID);
+        private void DefaultPullSpeed()
+        {
+            DOVirtual.Float(_currentPullSpeed, _defaultPullSpeed, 1f, r => {
+                _ai.Animator.SetFloat(_pullSpeedID, r);
+                _currentPullSpeed = r;
+            });
+        }
+        private void StruggledPullSpeed()
+        {
+            DOVirtual.Float(_currentPullSpeed, _struggledPullSPeed, 1f, r => {
+                _ai.Animator.SetFloat(_pullSpeedID, r);
+                _currentPullSpeed = r;
+            });
+        }
     }
 }

@@ -17,8 +17,7 @@ namespace ZestGames
 
         protected override void OnEnable()
         {
-            TryGetComponent(out _anim);
-            if (!_anim)
+            if (!TryGetComponent(out _anim))
                 _animationDuration = 0f;
 
             OnClicked += Clicked;
@@ -31,8 +30,10 @@ namespace ZestGames
 
         private void Clicked(Action action)
         {
+            interactable = false;
+
             // Play audio
-            //AudioHandler.PlayAudio(AudioHandler.AudioType.Button_Click);
+            AudioHandler.PlayAudio(Enums.AudioType.Button_Click, 0.5f);
 
             // Reset and Play the animation
             if (_anim)
