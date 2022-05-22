@@ -52,7 +52,7 @@ namespace ZestGames
         {
             _agent.SetDestination(_currentTarget.position);
 
-            if (Operation.IsTargetReached(transform, _currentTarget.position, 0.01f) && !_targetReached)
+            if (Operation.IsTargetReached(transform, _currentTarget.position, 0.02f) && !_targetReached)
             {
                 _ai.IsMoving = false;
 
@@ -74,7 +74,10 @@ namespace ZestGames
         private void Cheer()
         {
             _agent.speed = _ai.CurrentMovementSpeed * 0.5f;
-            _agent.SetDestination(_currentTarget.position + new Vector3(Random.Range(-2f, 2f), 0f, (Random.Range(-3f, 3f))));
+            if (_ai.CurrentSide == Ai.Side.Left)
+                _agent.SetDestination(transform.position + new Vector3(Random.Range(-3f, 0f), 0f, (Random.Range(-3f, 3f))));
+            else if (_ai.CurrentSide == Ai.Side.Right)
+                _agent.SetDestination(transform.position + new Vector3(Random.Range(0f, 3f), 0f, (Random.Range(-3f, 3f))));
             transform.rotation = Quaternion.Euler(0f, Random.Range(-90f, 90f), 0f);
         }
     }

@@ -16,6 +16,9 @@ namespace CastleInvasion
         //private Color _currentRimColor;
         private float _currentRimValue;
         private float _currentRimSize;
+        private float _currentStruggleRate;
+
+        public float CurrentStruggleRate => _currentStruggleRate;
 
         public void Init(Ai ai)
         {
@@ -27,8 +30,7 @@ namespace CastleInvasion
             _renderer.material.SetFloat("_FlatRimLightAlign", 0);
             _renderer.material.SetFloat("_FlatRimSize", 0);
             //_currentRimColor = Color.white;
-            _currentRimValue = 0f;
-            _currentRimSize = 0f;
+            _currentRimValue = _currentRimSize = _currentStruggleRate = 0f;
 
             UpdateRendererChangeTime();
 
@@ -77,6 +79,9 @@ namespace CastleInvasion
                 _renderer.material.SetFloat("_FlatRimSize", r);
                 _currentRimSize = r;
             });
+            DOVirtual.Float(_currentStruggleRate, 2f, rendererChangeTime, r => {
+                _currentStruggleRate = r;
+            });
         }
 
         private void MakeCharacterNormal()
@@ -94,6 +99,9 @@ namespace CastleInvasion
             DOVirtual.Float(_currentRimSize, 0, rendererChangeTime + 2f, r => {
                 _renderer.material.SetFloat("_FlatRimSize", r);
                 _currentRimSize = r;
+            });
+            DOVirtual.Float(_currentStruggleRate, 0f, rendererChangeTime, r => {
+                _currentStruggleRate = r;
             });
         }
 

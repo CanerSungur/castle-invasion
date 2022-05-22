@@ -9,15 +9,19 @@ namespace CastleInvasion
         private DoorAnimationController animationController;
         public DoorAnimationController AnimationController => animationController == null ? animationController = GetComponent<DoorAnimationController>() : animationController;
 
-        private int _maxHealth = 100;
+        [Header("-- SETUP --")]
+        [SerializeField] private int maxHealth = 100;
         private int _currentHealth;
         private bool _gotHit = false;
-        
+
+        [Header("-- EFFECT SETUP --")]
+        [SerializeField] private ParticleSystem woodParticles;
+
         public bool GotHit => _gotHit;
 
         private void Awake()
         {
-            _currentHealth = _maxHealth;
+            _currentHealth = maxHealth;
             AnimationController.Init(this);
 
             DoorEvents.OnResetDoor += () => _gotHit = false;
@@ -32,6 +36,7 @@ namespace CastleInvasion
         {
             _gotHit = true;
             _currentHealth -= damage;
+            woodParticles.Play();
             if (_currentHealth <= 0)
                 Break();
 

@@ -23,7 +23,7 @@ namespace ZestGames
         public static int SizeCost => (int)(_upgradeCost * Mathf.Pow(_upgradeCostIncreaseRate, SizeLevel));
 
         // Core data
-        private readonly float _coreMoney = 3f;
+        private readonly float _coreMoney = 1f;
         private readonly float _coreStamina = 100f;
         private readonly int _coreSize = 5;
         private static readonly int _coreDamage = 1;
@@ -48,6 +48,8 @@ namespace ZestGames
             UpdateMoneyValue();
             UpdateStamina();
             UpdateSize();
+
+            TotalMoney = 5000;
 
             // Calculate StruggleLimit
             PullStaminaCost = pullStaminaCost;

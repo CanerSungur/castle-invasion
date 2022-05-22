@@ -118,7 +118,7 @@ namespace CastleInvasion
         private void AddSoldiers()
         {
             // Setup left row soldier
-            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, Vector3.zero, Quaternion.identity).GetComponent<Ai>();
+            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, new Vector3(-10f, 0f, -20f), Quaternion.identity).GetComponent<Ai>();
             leftAi.transform.parent = null;
             if (!leftRowSoldiers.Contains(leftAi))
             {
@@ -127,7 +127,7 @@ namespace CastleInvasion
             }
 
             // Setup right row soldier
-            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, Vector3.zero, Quaternion.identity).GetComponent<Ai>();
+            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, new Vector3(10f, 0f, -20f), Quaternion.identity).GetComponent<Ai>();
             rightAi.transform.parent = null;
             if (!rightRowSoldiers.Contains(rightAi))
             {

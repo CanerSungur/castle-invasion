@@ -13,6 +13,7 @@ namespace ZestGames
         private LevelManager _levelManager;
         private SettingsManager _settingsManager;
         private DataManager _dataManager;
+        private CameraManager _cameraManager;
 
         private void Init()
         {
@@ -30,6 +31,8 @@ namespace ZestGames
             _settingsManager.Init(this);
             _uiManager = GetComponent<UiManager>();
             _uiManager.Init(this);
+            _cameraManager = GetComponent<CameraManager>();
+            _cameraManager.Init(this);
 
             UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney);
             UiEvents.OnUpdateLevelText?.Invoke(LevelHandler.Level);

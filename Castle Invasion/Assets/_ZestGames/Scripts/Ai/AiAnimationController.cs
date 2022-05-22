@@ -4,7 +4,6 @@ using System;
 
 namespace ZestGames
 {
-    [RequireComponent(typeof(Animator))]
     public class AiAnimationController : MonoBehaviour
     {
         private Ai _ai;
@@ -23,6 +22,9 @@ namespace ZestGames
         // floats
         private readonly int _runSpeedID = Animator.StringToHash("RunSpeed");
         private readonly int _pullSpeedID = Animator.StringToHash("PullSpeed");
+        private readonly int _struggleRateID = Animator.StringToHash("StruggleRate");
+        // ints
+        private readonly int _winCountID = Animator.StringToHash("WinCount");
         // layer
         private readonly int _carryingLayer = 1;
 
@@ -33,7 +35,6 @@ namespace ZestGames
         private readonly float _struggledPullSPeed = 0.75f;
 
         private bool _ramIsReleased => _ai.BatteringRam.Movement.IsReleased;
-        private bool _ramIsResetting => _ai.BatteringRam.Movement.Resetting;
 
         public void Init(Ai ai)
         {
@@ -45,8 +46,6 @@ namespace ZestGames
 
             Idle();
 
-            //_ai.OnIdle += Idle;
-            //_ai.OnMove += Run;
             _ai.OnDie += Die;
             _ai.OnWin += Win;
             PlayerEvents.OnRamPulled += Pull;
@@ -57,8 +56,6 @@ namespace ZestGames
 
         private void OnDisable()
         {
-            //_ai.OnIdle -= Idle;
-            //_ai.OnMove -= Run;
             _ai.OnDie -= Die;
             _ai.OnWin -= Win;
             PlayerEvents.OnRamPulled -= Pull;
@@ -71,9 +68,6 @@ namespace ZestGames
         {
             if (GameManager.GameEnd == Enums.GameEnd.Success) return;
 
-            //if (_ai.BatteringRam.Movement.IsBeingPulled) return;
-            //if (_ramIsResetting)
-            //    Pull();
             if (_ramIsReleased)
                 Run();
             else
@@ -82,6 +76,7 @@ namespace ZestGames
             }
 
             _ai.Animator.SetBool(_resettingID, _ai.BatteringRam.Movement.Resetting);
+            _ai.Animator.SetFloat(_struggleRateID, _ai.StaminaController.CurrentStruggleRate);
         }
 
         private void Idle()
@@ -108,6 +103,7 @@ namespace ZestGames
         { 
             _ai.Animator.SetLayerWeight(_carryingLayer, 0f); 
             _ai.Animator.SetTrigger(_winID);
+            _ai.Animator.SetInteger(_winCountID, UnityEngine.Random.Range(0, 2));
         }
         private void Pull() => _ai.Animator.SetTrigger(_pullID);
         private void HitWall() => _ai.Animator.SetTrigger(_hitWallID);

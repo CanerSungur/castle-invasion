@@ -1,14 +1,12 @@
 using UnityEngine;
 using Cinemachine;
 using System;
-using CastleInvasion;
+using DG.Tweening;
 
 namespace ZestGames
 {
     public class CameraManager : MonoBehaviour
     {
-        private BatteringRam _batteringRam;
-
         [Header("-- CAMERA SETUP --")]
         [SerializeField] private CinemachineVirtualCamera gameStartCM;
         [SerializeField] private CinemachineVirtualCamera gameplayCM;
@@ -29,17 +27,19 @@ namespace ZestGames
 
         // Camera position setup
         private readonly float _defaultCamDistance = -12f;
-        private readonly float _camDistanceIncreaseRate = -0.5f;
-        private float _currentCamDistance;
+        private readonly float _defaultCamHeight = 6f;
+        private readonly float _camDistanceIncreaseRate = -1f;
+        private readonly float _camHeightIncreaseRate = 0.15f;
+        private float _currentCamDistance, _currentCamHeight;
 
         public static Action OnShakeCam;
 
-        private void Awake()
+        public void Init(GameManager gameManager)
         {
-            _batteringRam = FindObjectOfType<BatteringRam>();
-
             _gameplayCMTransposer = gameplayCM.GetCinemachineComponent<CinemachineTransposer>();
             _gameplayCMBasicPerlin = gameplayCM.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            _currentCamDistance = _defaultCamDistance;
+            _currentCamHeight = _defaultCamHeight;
 
             // cam distance
             UpdateCameraPosition();
@@ -49,26 +49,25 @@ namespace ZestGames
             _shakeTimer = _shakeDuration;
 
             gameStartCM.Priority = 2;
-            gameplayCM.Priority = 1;
+            gameplayCM.Priority = 3;
 
             _currentStruggleShakeFrequency = _minStruggleShakeFrequency;
             _struggleShakeFrequencyRate = 5;
-        }
 
-        private void Start()
-        {
-            GameEvents.OnGameStart += () => gameplayCM.Priority = 3;
+            //GameEvents.OnGameStart += () => gameplayCM.Priority = 3;
             OnShakeCam += () => _shakeStarted = true;
             PlayerEvents.OnStartStruggle += StartStruggle;
             PlayerEvents.OnStopStruggle += StopStruggle;
+            UpgradeEvents.OnUpgradeSize += UpdateCameraPosition;
         }
 
         private void OnDisable()
         {
-            GameEvents.OnGameStart -= () => gameplayCM.Priority = 3;
+            //GameEvents.OnGameStart -= () => gameplayCM.Priority = 3;
             OnShakeCam -= () => _shakeStarted = true;
             PlayerEvents.OnStartStruggle -= StartStruggle;
             PlayerEvents.OnStopStruggle -= StopStruggle;
+            UpgradeEvents.OnUpgradeSize -= UpdateCameraPosition;
         }
 
         private void Update()
@@ -80,8 +79,20 @@ namespace ZestGames
         private void UpdateCameraPosition()
         {
             // Update camera according to ram size
+            float _currentDist = _currentCamDistance;
+            float _currentHeight = _currentCamHeight;
+
             _currentCamDistance = _defaultCamDistance + ((DataManager.SizeLevel - 1) * _camDistanceIncreaseRate);
-            _gameplayCMTransposer.m_FollowOffset = new Vector3(_gameplayCMTransposer.m_FollowOffset.x, _gameplayCMTransposer.m_FollowOffset.y, _currentCamDistance);
+            _currentCamHeight = _defaultCamHeight + ((DataManager.SizeLevel - 1) * _camHeightIncreaseRate);
+
+            DOVirtual.Float(_currentDist, _currentCamDistance, 1f, r => {
+                _gameplayCMTransposer.m_FollowOffset = new Vector3(_gameplayCMTransposer.m_FollowOffset.x, _gameplayCMTransposer.m_FollowOffset.y, r);
+                _currentCamDistance = r;
+            });
+            DOVirtual.Float(_currentHeight, _currentCamHeight, 1f, r => {
+                _gameplayCMTransposer.m_FollowOffset = new Vector3(_gameplayCMTransposer.m_FollowOffset.x, r, _gameplayCMTransposer.m_FollowOffset.z);
+                _currentCamHeight = r;
+            });
         }
 
         private void ShakeCamForAWhile()

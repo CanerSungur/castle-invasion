@@ -43,6 +43,7 @@ namespace CastleInvasion
                 CameraManager.OnShakeCam?.Invoke();
                 CollectableEvents.OnCollect?.Invoke(DataManager.MoneyValue * _batteringRam.Damage);
                 UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney);
+                FeedbackEvents.OnGiveMoneyFeedback?.Invoke(DataManager.MoneyValue * _batteringRam.Damage);
             }
         }
 

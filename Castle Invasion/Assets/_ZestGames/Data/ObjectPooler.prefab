@@ -56,3 +56,6 @@ MonoBehaviour:
   - PoolStamp: 2
     Prefab: {fileID: 2877673011915780695, guid: 7173c0048f7380d49bc39fe35501c97a, type: 3}
     Size: 25
+  - PoolStamp: 5
+    Prefab: {fileID: 1208829878587827544, guid: e11f460ac1d2fb644a3300ca01482923, type: 3}
+    Size: 3

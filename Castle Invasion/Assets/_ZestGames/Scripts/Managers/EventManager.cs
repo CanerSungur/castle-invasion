@@ -43,4 +43,9 @@ namespace ZestGames
     {
         public static Action OnResetDoor, OnGetHit, OnBreak;
     }
+
+    public static class FeedbackEvents
+    {
+        public static Action<float> OnGiveMoneyFeedback;
+    }
 }

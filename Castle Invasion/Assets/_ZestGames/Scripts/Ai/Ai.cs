@@ -13,7 +13,7 @@ namespace ZestGames
         #region COMPONENTS
 
         private Animator animator;
-        public Animator Animator => animator == null ? animator = GetComponent<Animator>() : animator;
+        public Animator Animator => animator == null ? animator = GetComponentInChildren<Animator>() : animator;
 
         private Collider coll;
         public Collider Collider => coll == null ? coll = GetComponent<Collider>() : coll;
@@ -162,6 +162,11 @@ namespace ZestGames
                 OnDie?.Invoke();
                 Rigidbody.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(-1f, 1f)) * 5, ForceMode.Impulse);
                 transform.rotation = Quaternion.Euler(transform.rotation.x, UnityEngine.Random.Range(0f, 180f), transform.rotation.z);
+
+                Delayer.DoActionAfterDelay(this, 2.5f, () => {
+                    Rigidbody.velocity = Vector3.zero;
+                    Rigidbody.angularVelocity = Vector3.zero;
+                });
             }
             else if (gameEnd == Enums.GameEnd.Success)
                 OnWin?.Invoke();
