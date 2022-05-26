@@ -48,14 +48,17 @@ MonoBehaviour:
     Prefab: {fileID: 6185430543415887423, guid: e068305a7f8787e419a714e61f48ac84, type: 3}
     Size: 3
   - PoolStamp: 3
-    Prefab: {fileID: 4908440258384009737, guid: 1b2d89c2a94d6fd498f1827063fa149f, type: 3}
+    Prefab: {fileID: 7560348498310808493, guid: 52c57cba55bfa164da9e73f72512ec24, type: 3}
     Size: 25
   - PoolStamp: 4
-    Prefab: {fileID: 8692137042686686915, guid: 917f9719134dfae4fbb195d9954f8030, type: 3}
+    Prefab: {fileID: 608569062336239054, guid: 5cc7fc7e28f162b42af9dfea0e1226f5, type: 3}
     Size: 25
   - PoolStamp: 2
-    Prefab: {fileID: 2877673011915780695, guid: 7173c0048f7380d49bc39fe35501c97a, type: 3}
+    Prefab: {fileID: 2516502490346214525, guid: b33dbdb44d6d40a46a574860aa06640c, type: 3}
     Size: 25
   - PoolStamp: 5
     Prefab: {fileID: 1208829878587827544, guid: e11f460ac1d2fb644a3300ca01482923, type: 3}
+    Size: 3
+  - PoolStamp: 6
+    Prefab: {fileID: 3149553769896024935, guid: 44972fb7195a38542816f4a01ecbdcbc, type: 3}
     Size: 3

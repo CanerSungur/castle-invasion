@@ -20,6 +20,8 @@ namespace CastleInvasion
         [Header("-- STRUGGLE SETUP --")]
         private int _pullStaminaCost, _struggleLimit, _pullMaxStamina;
         private bool _firstHitHappened = false;
+        private readonly float _distanceBetweenRamRows = 1.031f;
+
         public int StrugglePullCount { get; private set; }
         public int PullCount { get; private set; }
 
@@ -94,10 +96,17 @@ namespace CastleInvasion
         {
             for (int i = 0; i < DataManager.CurrentSize; i++)
             {
-                BatteringRamRow row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRow, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+                BatteringRamRow row;
+                if (i == 0)
+                    row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRowTip, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+                else if (i == DataManager.CurrentSize - 1)
+                    row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRowEnd, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+                else
+                    row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRow, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+
                 //BatteringRamRow row = Instantiate(rowPrefab, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
                 row.transform.parent = transform;
-                row.transform.localPosition = new Vector3(0, 0, -i * 1f);
+                row.transform.localPosition = new Vector3(0, 0, -i * _distanceBetweenRamRows);
 
                 row.Init(this);
 
@@ -107,9 +116,13 @@ namespace CastleInvasion
 
         private void AddRow()
         {
-            BatteringRamRow row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRow, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
+            //// Change last row to middle row style first
+            //rows[rows.Count - 1]
+
+            // Then add last row as row end style
+            BatteringRamRow row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRowEnd, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
             row.transform.parent = transform;
-            row.transform.localPosition = new Vector3(0, 0, -(DataManager.CurrentSize - 1));
+            row.transform.localPosition = new Vector3(0, 0, -(DataManager.CurrentSize - 1) * _distanceBetweenRamRows);
             row.Init(this);
 
             AddSoldiers();

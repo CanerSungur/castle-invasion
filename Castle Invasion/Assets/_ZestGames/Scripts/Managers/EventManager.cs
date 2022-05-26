@@ -41,7 +41,7 @@ namespace ZestGames
 
     public static class DoorEvents
     {
-        public static Action OnResetDoor, OnGetHit, OnBreak;
+        public static Action OnResetDoor, OnGetHit, OnBreak, OnUpdateState;
     }
 
     public static class FeedbackEvents

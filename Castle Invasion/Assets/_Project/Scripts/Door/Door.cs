@@ -6,8 +6,15 @@ namespace CastleInvasion
 {
     public class Door : MonoBehaviour
     {
-        private DoorAnimationController animationController;
-        public DoorAnimationController AnimationController => animationController == null ? animationController = GetComponent<DoorAnimationController>() : animationController;
+        #region SCRIPT REFERENCES
+
+        private DoorAnimationController _animationController;
+        public DoorAnimationController AnimationController => _animationController == null ? _animationController = GetComponent<DoorAnimationController>() : _animationController;
+
+        private DoorStateController _stateController;
+        public DoorStateController StateController => _stateController == null ? _stateController = GetComponent<DoorStateController>() : _stateController;
+
+        #endregion
 
         [Header("-- SETUP --")]
         [SerializeField] private int maxHealth = 100;
@@ -18,11 +25,14 @@ namespace CastleInvasion
         [SerializeField] private ParticleSystem woodParticles;
 
         public bool GotHit => _gotHit;
+        public int MaxHealth => maxHealth;
+        public int CurrentHealth => _currentHealth;
 
         private void Awake()
         {
             _currentHealth = maxHealth;
             AnimationController.Init(this);
+            StateController.Init(this);
 
             DoorEvents.OnResetDoor += () => _gotHit = false;
         }
@@ -41,6 +51,7 @@ namespace CastleInvasion
                 Break();
 
             DoorEvents.OnGetHit?.Invoke();
+            DoorEvents.OnUpdateState?.Invoke();
             //Shake();
         }
 

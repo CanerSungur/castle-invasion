@@ -11,6 +11,9 @@ namespace ZestGames
         [SerializeField] private CinemachineVirtualCamera gameStartCM;
         [SerializeField] private CinemachineVirtualCamera gameplayCM;
         private CinemachineTransposer _gameplayCMTransposer;
+        [SerializeField] private CinemachineVirtualCamera dollyCam;
+        private CinemachineTrackedDolly _dollyCamTrackedDolly;
+        private readonly float _dollyTrackTime = 3f;
 
         [Header("-- SHAKE SETUP --")]
         private CinemachineBasicMultiChannelPerlin _gameplayCMBasicPerlin;
@@ -28,7 +31,7 @@ namespace ZestGames
         // Camera position setup
         private readonly float _defaultCamDistance = -12f;
         private readonly float _defaultCamHeight = 6f;
-        private readonly float _camDistanceIncreaseRate = -1f;
+        private readonly float _camDistanceIncreaseRate = -1.1f;
         private readonly float _camHeightIncreaseRate = 0.15f;
         private float _currentCamDistance, _currentCamHeight;
 
@@ -38,6 +41,7 @@ namespace ZestGames
         {
             _gameplayCMTransposer = gameplayCM.GetCinemachineComponent<CinemachineTransposer>();
             _gameplayCMBasicPerlin = gameplayCM.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            _dollyCamTrackedDolly = dollyCam.GetCinemachineComponent<CinemachineTrackedDolly>();
             _currentCamDistance = _defaultCamDistance;
             _currentCamHeight = _defaultCamHeight;
 
@@ -48,13 +52,18 @@ namespace ZestGames
             _gameplayCMBasicPerlin.m_AmplitudeGain = 0f;
             _shakeTimer = _shakeDuration;
 
-            gameStartCM.Priority = 2;
-            gameplayCM.Priority = 3;
+            dollyCam.Priority = 2;
+            gameplayCM.Priority = 1;
+
+            // Dolly Cam Setup
+            _dollyCamTrackedDolly.m_PathPosition = 5f;
+            dollyCam.transform.rotation = Quaternion.Euler(30f, 0f, 0f);
+            ZestCore.Utility.Delayer.DoActionAfterDelay(this, 0.75f, PlayDollyCam);
 
             _currentStruggleShakeFrequency = _minStruggleShakeFrequency;
             _struggleShakeFrequencyRate = 5;
 
-            //GameEvents.OnGameStart += () => gameplayCM.Priority = 3;
+            GameEvents.OnGameStart += () => gameplayCM.Priority = 3;
             OnShakeCam += () => _shakeStarted = true;
             PlayerEvents.OnStartStruggle += StartStruggle;
             PlayerEvents.OnStopStruggle += StopStruggle;
@@ -63,7 +72,7 @@ namespace ZestGames
 
         private void OnDisable()
         {
-            //GameEvents.OnGameStart -= () => gameplayCM.Priority = 3;
+            GameEvents.OnGameStart -= () => gameplayCM.Priority = 3;
             OnShakeCam -= () => _shakeStarted = true;
             PlayerEvents.OnStartStruggle -= StartStruggle;
             PlayerEvents.OnStopStruggle -= StopStruggle;
@@ -139,6 +148,21 @@ namespace ZestGames
             _currentStruggleShakeFrequency = _minStruggleShakeFrequency;
             _gameplayCMBasicPerlin.m_AmplitudeGain = 0f;
             _gameplayCMBasicPerlin.m_FrequencyGain = 1f;
+        }
+
+        private void PlayDollyCam()
+        {
+            //_dollyCamTrackedDolly.m_PathPosition = 3;
+            DOVirtual.Float(5, 0, _dollyTrackTime, r => {
+                _dollyCamTrackedDolly.m_PathPosition = r;
+            });
+            DOVirtual.Float(30, 0, _dollyTrackTime * 0.75f, r => {
+                dollyCam.transform.rotation = Quaternion.Euler(r, 0f, 0f);
+            }).OnComplete(() => {
+                DOVirtual.Float(0, 30, _dollyTrackTime * 0.25f, r => {
+                    dollyCam.transform.rotation = Quaternion.Euler(r, 0f, 0f);
+                });
+            });
         }
     }
 }

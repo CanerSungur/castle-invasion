@@ -14,7 +14,7 @@ namespace CastleInvasion
 
         private float _startingPoint;
         private float _targetPullPoint;
-        private float _pullRate = 0.1f;
+        private float _pullRate = 0.25f;
 
         private float _currentPullTime;
         private readonly float _defaultPullTime = 0.5f;
