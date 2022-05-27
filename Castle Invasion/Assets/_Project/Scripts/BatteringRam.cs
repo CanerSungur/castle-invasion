@@ -24,6 +24,7 @@ namespace CastleInvasion
 
         public int StrugglePullCount { get; private set; }
         public int PullCount { get; private set; }
+        public bool DoorIsBroken { get; private set; }
 
         // Struggle after first hit
         private readonly float _defaultLimitDecreaseRate = 0.5f;
@@ -49,6 +50,8 @@ namespace CastleInvasion
 
         private void Start()
         {
+            DoorIsBroken = false;
+
             _rigidbody = GetComponent<Rigidbody>();
 
             _movement = GetComponent<BatteringRamMovement>();
@@ -67,6 +70,8 @@ namespace CastleInvasion
             PlayerEvents.OnRamReleased += ResetPullCount;
             PlayerEvents.OnSetCurrentStamina += UpdateLimits;
             PlayerEvents.OnSetCurrentSize += AddRow;
+
+            DoorEvents.OnBreak += () => DoorIsBroken = true;
         }
 
         private void OnDisable()
@@ -77,6 +82,8 @@ namespace CastleInvasion
             PlayerEvents.OnRamReleased -= ResetPullCount;
             PlayerEvents.OnSetCurrentStamina -= UpdateLimits;
             PlayerEvents.OnSetCurrentSize -= AddRow;
+
+            DoorEvents.OnBreak -= () => DoorIsBroken = true;
         }
 
         public int Hit()
@@ -116,8 +123,8 @@ namespace CastleInvasion
 
         private void AddRow()
         {
-            //// Change last row to middle row style first
-            //rows[rows.Count - 1]
+            //// Change last row mesh to middle row mesh first
+            rows[rows.Count - 1].ChangeEndPartMesh();
 
             // Then add last row as row end style
             BatteringRamRow row = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RamRowEnd, Vector3.zero, Quaternion.identity).GetComponent<BatteringRamRow>();
@@ -131,7 +138,7 @@ namespace CastleInvasion
         private void AddSoldiers()
         {
             // Setup left row soldier
-            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, new Vector3(-10f, 0f, -20f), Quaternion.identity).GetComponent<Ai>();
+            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, new Vector3(-15f, 0f, -26f), Quaternion.identity).GetComponent<Ai>();
             leftAi.transform.parent = null;
             if (!leftRowSoldiers.Contains(leftAi))
             {
@@ -140,7 +147,7 @@ namespace CastleInvasion
             }
 
             // Setup right row soldier
-            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, new Vector3(10f, 0f, -20f), Quaternion.identity).GetComponent<Ai>();
+            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, new Vector3(15f, 0f, -26f), Quaternion.identity).GetComponent<Ai>();
             rightAi.transform.parent = null;
             if (!rightRowSoldiers.Contains(rightAi))
             {
@@ -195,11 +202,6 @@ namespace CastleInvasion
                 _pullMaxStamina = (int)(DataManager.MaxStamina * (_defaultLimitDecreaseRate - (_limitDecreaseRate * _hitCount)));
                 PlayerEvents.OnDecreaseAiLimits?.Invoke(_hitCount);
             }
-        }
-
-        private void UpdateStamina()
-        {
-           
         }
     }
 }

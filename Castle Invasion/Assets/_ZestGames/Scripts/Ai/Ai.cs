@@ -66,6 +66,7 @@ namespace ZestGames
         public float CurrentMovementSpeed => _currentMovementSpeed;
         public BatteringRam BatteringRam => _batteringRam;
         public Side CurrentSide => currentSide;
+        public bool FirstInitialization => _firstInitialization;
 
         #endregion
 
@@ -125,8 +126,8 @@ namespace ZestGames
 
             UpdateCurrentMovementSpeed();
 
-            if (!_firstInitialization)
-                OnSetTarget?.Invoke(Target);
+            //if (!_firstInitialization)
+            //    OnSetTarget?.Invoke(Target);
         }
 
         private void UpdateCurrentMovementSpeed()

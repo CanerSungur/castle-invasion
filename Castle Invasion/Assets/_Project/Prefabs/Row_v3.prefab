@@ -592,7 +592,7 @@ GameObject:
   - component: {fileID: 5672194019393592541}
   - component: {fileID: 5037069649333220395}
   m_Layer: 0
-  m_Name: Cylinder.004
+  m_Name: Middle Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

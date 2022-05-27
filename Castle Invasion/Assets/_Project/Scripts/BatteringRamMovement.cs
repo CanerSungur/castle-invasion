@@ -88,6 +88,8 @@ namespace CastleInvasion
 
         public void ResetPulling()
         {
+            if (_batteringRam.DoorIsBroken) return;
+
             Resetting = true;
             //transform.DOKill();
             transform.DOMoveZ(_targetPullPoint, 2f).OnComplete(() => {

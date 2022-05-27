@@ -31,7 +31,7 @@ namespace ZestGames
         // Camera position setup
         private readonly float _defaultCamDistance = -12f;
         private readonly float _defaultCamHeight = 6f;
-        private readonly float _camDistanceIncreaseRate = -1.1f;
+        private readonly float _camDistanceIncreaseRate = -1.5f;
         private readonly float _camHeightIncreaseRate = 0.15f;
         private float _currentCamDistance, _currentCamHeight;
 

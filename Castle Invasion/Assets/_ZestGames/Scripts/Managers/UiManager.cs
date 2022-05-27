@@ -32,17 +32,22 @@ namespace ZestGames
             levelFail.Init(this);
             levelSuccess.Init(this);
 
-            touchToStart.gameObject.SetActive(true);
-            upgrade.gameObject.SetActive(true);
+            Delayer.DoActionAfterDelay(this, 3f, () => {
+                touchToStart.gameObject.SetActive(true);
+                upgrade.gameObject.SetActive(true);
+
+                hud.gameObject.SetActive(true);
+                hudLevelObj.SetActive(false);
+                hudMoneyObj.SetActive(true);
+                Delayer.DoActionAfterDelay(this, 0.2f, () => UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney));
+            });
+            
 
             levelFail.gameObject.SetActive(false);
             levelSuccess.gameObject.SetActive(false);
             settings.gameObject.SetActive(false);
 
-            hud.gameObject.SetActive(true);
-            hudLevelObj.SetActive(false);
-            hudMoneyObj.SetActive(true);
-            Delayer.DoActionAfterDelay(this, 0.2f, () => UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney));
+            
 
             GameEvents.OnGameStart += GameStarted;
             GameEvents.OnGameEnd += GameEnded;

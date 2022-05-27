@@ -5,6 +5,9 @@ namespace CastleInvasion
 {
     public class BatteringRamRow : MonoBehaviour
     {
+        [Header("-- END PART SETUP --")]
+        [SerializeField] private bool thisIsEndPart = false;
+
         private BatteringRam _batteringRam;
         private Transform _leftTransform, _rightTransform;
         private Rigidbody _rigidbody;
@@ -61,6 +64,15 @@ namespace CastleInvasion
                 _rigidbody.isKinematic = false;
                 _rigidbody.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(-1f, 1f)) * UnityEngine.Random.Range(2f, 5f), ForceMode.Impulse);
             }
+        }
+
+        public void ChangeEndPartMesh()
+        {
+            GameObject endPart = transform.GetChild(3).gameObject;
+            GameObject middlePart = transform.GetChild(4).gameObject;
+
+            endPart.SetActive(false);
+            middlePart.SetActive(true);
         }
     }
 }

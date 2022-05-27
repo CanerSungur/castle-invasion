@@ -50,19 +50,22 @@ namespace ZestGames
 
         public void Motor()
         {
-            _agent.SetDestination(_currentTarget.position);
+            //transform.position = _currentTarget.position;
 
-            if (Operation.IsTargetReached(transform, _currentTarget.position, 0.02f) && !_targetReached)
+            #region With nav mesh start
+            if (_ai.FirstInitialization)
             {
-                _ai.IsMoving = false;
+                _agent.SetDestination(_currentTarget.position);
 
-                _targetReached = true;
-                _ai.CancelFirstInitialization();
-                _currentTarget = null;
-                //_ai.OnIdle?.Invoke();
+                if (Operation.IsTargetReached(transform, _currentTarget.position, 0.1f) && !_targetReached)
+                {
+                    _targetReached = true;
+                    _ai.CancelFirstInitialization();
+                }
             }
             else
-                _ai.IsMoving = true;
+                transform.position = _currentTarget.position;
+            #endregion
         }
 
         private void SetTarget(Transform newTarget)

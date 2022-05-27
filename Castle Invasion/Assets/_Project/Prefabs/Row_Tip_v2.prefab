@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5051590389157483111}
   - component: {fileID: 2106765125049248460}
   m_Layer: 0
-  m_Name: Cylinder.001
+  m_Name: Tip Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
