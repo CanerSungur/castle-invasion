@@ -22,8 +22,10 @@ namespace ZestGames
         private void ChangeScene(Enums.GameEnd gameEnd)
         {
             if (gameEnd == Enums.GameEnd.Success)
+            {
                 IncreaseLevel();
-
+            }
+                
             SceneManager.LoadScene(LevelHandler.GetSceneBuildIndexToBeLoaded());
         }
 

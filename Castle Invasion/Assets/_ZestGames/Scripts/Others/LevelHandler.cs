@@ -12,8 +12,8 @@ namespace ZestGames
         {
             Level = PlayerPrefs.GetInt("Level", 1);
             #region For Incrementals
-            PlayerPrefs.SetInt("ResetStaminaForNewLevel", 0);
-            PlayerPrefs.Save();
+            //PlayerPrefs.SetInt("ResetStaminaForNewLevel", 0);
+            //PlayerPrefs.Save();
             #endregion
 
             // Uncomment this and run game once to reset level.
@@ -31,9 +31,12 @@ namespace ZestGames
 
         public static void IncreaseLevel(LevelManager levelManager)
         {
+            // Reset upgrade levels for current level.
+            DataManager.ResetUpgradesForCurrentLevel();
+
             Level++;
             PlayerPrefs.SetInt("Level", Level);
-            PlayerPrefs.SetInt("ResetStaminaForNewLevel", 1);
+            //PlayerPrefs.SetInt("ResetStaminaForNewLevel", 1);
             PlayerPrefs.Save();
         }
     }

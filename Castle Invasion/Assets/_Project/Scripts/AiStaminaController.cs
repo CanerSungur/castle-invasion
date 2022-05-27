@@ -108,7 +108,6 @@ namespace CastleInvasion
         private void UpdateRendererChangeTime()
         {
             rendererChangeTime = (DataManager.StruggleLimit / DataManager.PullStaminaCost) * 0.75f;
-            Debug.Log(rendererChangeTime);
         }
 
         private void DecreaseAiLimits(int hitCount)

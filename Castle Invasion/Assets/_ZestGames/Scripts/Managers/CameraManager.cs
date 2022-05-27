@@ -31,7 +31,7 @@ namespace ZestGames
         // Camera position setup
         private readonly float _defaultCamDistance = -12f;
         private readonly float _defaultCamHeight = 6f;
-        private readonly float _camDistanceIncreaseRate = -1.5f;
+        private readonly float _camDistanceIncreaseRate = -1.3f;
         private readonly float _camHeightIncreaseRate = 0.15f;
         private float _currentCamDistance, _currentCamHeight;
 
@@ -91,8 +91,8 @@ namespace ZestGames
             float _currentDist = _currentCamDistance;
             float _currentHeight = _currentCamHeight;
 
-            _currentCamDistance = _defaultCamDistance + ((DataManager.SizeLevel - 1) * _camDistanceIncreaseRate);
-            _currentCamHeight = _defaultCamHeight + ((DataManager.SizeLevel - 1) * _camHeightIncreaseRate);
+            _currentCamDistance = _defaultCamDistance + ((DataManager.SizeForCurrentLevel - 1) * _camDistanceIncreaseRate);
+            _currentCamHeight = _defaultCamHeight + ((DataManager.SizeForCurrentLevel - 1) * _camHeightIncreaseRate);
 
             DOVirtual.Float(_currentDist, _currentCamDistance, 1f, r => {
                 _gameplayCMTransposer.m_FollowOffset = new Vector3(_gameplayCMTransposer.m_FollowOffset.x, _gameplayCMTransposer.m_FollowOffset.y, r);

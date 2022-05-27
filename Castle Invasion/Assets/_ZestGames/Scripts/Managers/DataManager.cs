@@ -49,7 +49,7 @@ namespace ZestGames
             UpdateStamina();
             UpdateSize();
 
-            TotalMoney = 5000;
+            TotalMoney = 10000;
 
             // Calculate StruggleLimit
             PullStaminaCost = pullStaminaCost;
@@ -161,24 +161,26 @@ namespace ZestGames
 
         private void LoadData()
         {
-            if (PlayerPrefs.GetInt("ResetStaminaForNewLevel") == 1)
-            {
-                StaminaForCurrentLevel = 1;
-                SizeForCurrentLevel = 1;
+            //if (PlayerPrefs.GetInt("ResetStaminaForNewLevel") == 1)
+            //{
+            //    StaminaForCurrentLevel = 1;
+            //    SizeForCurrentLevel = 1;
 
-                PlayerPrefs.SetInt("ResetStaminaForNewLevel", 0);
-                PlayerPrefs.Save();
-            }
-            else
-            {
-                StaminaForCurrentLevel = PlayerPrefs.GetInt("StaminaForCurrentLevel", 1);
-                SizeForCurrentLevel = PlayerPrefs.GetInt("SizeForCurrentLevel", 1);
-            }
+            //    PlayerPrefs.SetInt("ResetStaminaForNewLevel", 0);
+            //    PlayerPrefs.Save();
+            //}
+            //else
+            //{
+                
+            //}
 
             TotalMoney = PlayerPrefs.GetFloat("TotalMoney", 0);
             StaminaLevel = PlayerPrefs.GetInt("StaminaLevel", 1);
             IncomeLevel = PlayerPrefs.GetInt("IncomeLevel", 1);
             SizeLevel = PlayerPrefs.GetInt("SizeLevel", 1);
+
+            StaminaForCurrentLevel = PlayerPrefs.GetInt("StaminaForCurrentLevel", 1);
+            SizeForCurrentLevel = PlayerPrefs.GetInt("SizeForCurrentLevel", 1);
         }
 
         private void SaveData()
@@ -196,6 +198,13 @@ namespace ZestGames
             PlayerPrefs.SetInt("StaminaForCurrentLevel", StaminaForCurrentLevel);
             PlayerPrefs.SetInt("SizeForCurrentLevel", SizeForCurrentLevel);
 
+            PlayerPrefs.Save();
+        }
+
+        public static void ResetUpgradesForCurrentLevel()
+        {
+            PlayerPrefs.DeleteKey("StaminaForCurrentLevel");
+            PlayerPrefs.DeleteKey("SizeForCurrentLevel");
             PlayerPrefs.Save();
         }
     }

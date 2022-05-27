@@ -343,7 +343,6 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 68da2a69ee0255e419eca3c106a32ab7, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: c390d91f0c6bef94e81dca446187e9ac, type: 2}
   - {fileID: 7400000, guid: 68da2a69ee0255e419eca3c106a32ab7, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -1508,7 +1507,6 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 68da2a69ee0255e419eca3c106a32ab7, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: c390d91f0c6bef94e81dca446187e9ac, type: 2}
   - {fileID: 7400000, guid: 68da2a69ee0255e419eca3c106a32ab7, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -2144,7 +2142,6 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 68da2a69ee0255e419eca3c106a32ab7, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: c390d91f0c6bef94e81dca446187e9ac, type: 2}
   - {fileID: 7400000, guid: 68da2a69ee0255e419eca3c106a32ab7, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1

@@ -24,12 +24,17 @@ namespace CastleInvasion
         [Header("-- EFFECT SETUP --")]
         [SerializeField] private ParticleSystem woodParticles;
 
+        private readonly float _healthIncreaseRate = 0.25f;
+        private readonly float _mainDoorIncreaseRate = 0.35f;
+        private readonly int _baseHealth = 100;
+
         public bool GotHit => _gotHit;
         public int MaxHealth => maxHealth;
         public int CurrentHealth => _currentHealth;
 
         private void Awake()
         {
+            CalculateMaxHealth();
             _currentHealth = maxHealth;
             AnimationController.Init(this);
             StateController.Init(this);
@@ -40,6 +45,14 @@ namespace CastleInvasion
         private void OnDisable()
         {
             DoorEvents.OnResetDoor -= () => _gotHit = false;
+        }
+
+        private void CalculateMaxHealth()
+        {
+            maxHealth = _baseHealth + (int)(_healthIncreaseRate * LevelHandler.Level);
+
+            if (LevelHandler.Level != 0 && LevelHandler.Level % 5 == 0)
+                maxHealth += (int)(maxHealth * _mainDoorIncreaseRate);
         }
 
         public void GetHit(int damage)

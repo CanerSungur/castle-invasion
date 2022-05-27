@@ -80,23 +80,32 @@ namespace CastleInvasion
                     break;
                 case Enums.DoorState.Dent_1:
                     _renderer.SetBlendShapeWeight(_dentBlendKey, 50f);
+                    _renderer.SetBlendShapeWeight(_breakBlendKey, 0f);
                     debris_1.SetActive(true);
                     break;
                 case Enums.DoorState.Dent_2:
                     _renderer.SetBlendShapeWeight(_dentBlendKey, 100f);
+                    _renderer.SetBlendShapeWeight(_breakBlendKey, 0f);
+                    if (!debris_1.activeSelf) debris_1.SetActive(true);
                     debris_2.SetActive(true);
                     break;
-                case Enums.DoorState.Break_1:
+                case
+                Enums.DoorState.Break_1:
+                    _renderer.SetBlendShapeWeight(_dentBlendKey, 100f);
                     _renderer.SetBlendShapeWeight(_breakBlendKey, 50f);
+                    if (!debris_1.activeSelf) debris_1.SetActive(true);
+                    if (!debris_2.activeSelf) debris_2.SetActive(true);
                     debris_3.SetActive(true);
                     break;
                 case Enums.DoorState.Break_2:
+                    _renderer.SetBlendShapeWeight(_dentBlendKey, 100f);
                     _renderer.SetBlendShapeWeight(_breakBlendKey, 100f);
+                    if (!debris_1.activeSelf) debris_1.SetActive(true);
+                    if (!debris_2.activeSelf) debris_2.SetActive(true);
+                    if (!debris_3.activeSelf) debris_3.SetActive(true);
                     debris_4.SetActive(true);
                     break;
             }
-
-            //HandleDebrisActivation(doorState);
         }
 
         private void EnableCracks() => _brokenMat.color = new Color(1f, 1f, 1f, 1f);
@@ -108,23 +117,6 @@ namespace CastleInvasion
             debris_3.SetActive(false);
             debris_4.SetActive(false);
             finalDebris.SetActive(false);
-        }
-        private void HandleDebrisActivation(Enums.DoorState doorState)
-        {
-            switch (doorState)
-            {
-                case Enums.DoorState.Solid:
-                    DisableAllDebris();
-                    break;
-                case Enums.DoorState.Dent_1:
-                    break;
-                case Enums.DoorState.Dent_2:
-                    break;
-                case Enums.DoorState.Break_1:
-                    break;
-                case Enums.DoorState.Break_2:
-                    break;
-            }
         }
         private void HandleDoorBreak()
         {

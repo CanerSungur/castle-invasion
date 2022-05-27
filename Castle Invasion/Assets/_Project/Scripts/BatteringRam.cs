@@ -8,7 +8,6 @@ namespace CastleInvasion
     public class BatteringRam : MonoBehaviour
     {
         [Header("-- SETUP --")]
-        [SerializeField] private GameObject rowPrefab;
         [SerializeField] private Door door;
         private List<BatteringRamRow> rows = new List<BatteringRamRow>();
         private List<Ai> leftRowSoldiers = new List<Ai>();
@@ -59,7 +58,7 @@ namespace CastleInvasion
             _animationController = GetComponent<BatteringRamAnimController>();
             _animationController.Init(this);
 
-            SetupRam();
+            Delayer.DoActionAfterDelay(this, 0.5f, SetupRam);
 
             _pullStaminaCost = DataManager.PullStaminaCost;
             _struggleLimit = DataManager.StruggleLimit;

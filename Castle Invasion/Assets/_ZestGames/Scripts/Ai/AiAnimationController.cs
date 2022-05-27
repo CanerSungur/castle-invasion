@@ -66,7 +66,11 @@ namespace ZestGames
 
         private void Update()
         {
-            if (GameManager.GameEnd == Enums.GameEnd.Success) return;
+            if (GameManager.GameEnd == Enums.GameEnd.Success)
+            {
+                _ai.Animator.SetFloat(_struggleRateID, 0);
+                return;
+            }
 
             if (_ramIsReleased)
                 Run();
