@@ -34,6 +34,7 @@ namespace CastleInvasion
         private Rigidbody _rigidbody;
         #endregion
 
+        #region Script References
         private BatteringRamMovement _movement;
         private BatteringRamAnimController _animationController;
         private BatteringRamAudio _audioController;
