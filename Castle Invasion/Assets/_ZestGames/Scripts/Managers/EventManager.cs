@@ -12,7 +12,7 @@ namespace ZestGames
 
     public static class PlayerEvents 
     {
-        public static Action OnStartStruggle, OnStopStruggle, OnRamPulled, OnRamReleased, OnHitWall, OnSetCurrentStamina, OnSetCurrentSize;
+        public static Action OnStartStruggle, OnStopStruggle, OnRamPulled, OnRamReleased, OnHitDoor, OnSetCurrentStamina, OnSetCurrentSize;
         public static Action<int> OnDecreaseAiLimits;
     }
 
@@ -47,5 +47,10 @@ namespace ZestGames
     public static class FeedbackEvents
     {
         public static Action<float> OnGiveMoneyFeedback;
+    }
+
+    public static class AudioEvents
+    {
+        public static Action OnPlayRamCreak, OnPlayDoorHit;
     }
 }

@@ -13,7 +13,7 @@ namespace CastleInvasion
         [SerializeField] private ParticleSystem sweatParticles;
         [SerializeField] private float rendererChangeTime = 1f;
         private SkinnedMeshRenderer _renderer;
-        //private Color _currentRimColor;
+        private Color _currentColor;
         private float _currentRimValue;
         private float _currentRimSize;
         private float _currentStruggleRate;
@@ -23,8 +23,10 @@ namespace CastleInvasion
         public void Init(Ai ai)
         {
             _ai = ai;
+            _currentColor = Color.white;
 
             _renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+            _renderer.material.color = _currentColor;
             _renderer.material.SetFloat("_RimEnabled", 1);
             _renderer.material.SetColor("_FlatRimColor", Color.red);
             _renderer.material.SetFloat("_FlatRimLightAlign", 0);
@@ -41,6 +43,7 @@ namespace CastleInvasion
 
         private void OnDisable()
         {
+            if (!_ai) return;
             PlayerEvents.OnStartStruggle -= StartStruggle;
             PlayerEvents.OnStopStruggle -= StopStruggle;
             PlayerEvents.OnDecreaseAiLimits -= DecreaseAiLimits;
@@ -71,6 +74,10 @@ namespace CastleInvasion
             //    _renderer.material.SetColor("_FlatRimColor", r);
             //    _currentRimColor = r;
             //});
+            DOVirtual.Color(_currentColor, Color.red, rendererChangeTime, r => {
+                _renderer.material.color = r;
+                _currentColor = r;
+            });
             DOVirtual.Float(_currentRimValue, 1f, rendererChangeTime, r => {
                 _renderer.material.SetFloat("_FlatRimLightAlign", r);
                 _currentRimValue = r;
@@ -92,6 +99,10 @@ namespace CastleInvasion
             //    _renderer.material.SetColor("_FlatRimColor", r);
             //    _currentRimColor = r;
             //});
+            DOVirtual.Color(_currentColor, Color.white, rendererChangeTime, r => {
+                _renderer.material.color = r;
+                _currentColor = r;
+            });
             DOVirtual.Float(_currentRimValue, 0, rendererChangeTime + 2f, r => {
                 _renderer.material.SetFloat("_FlatRimLightAlign", r);
                 _currentRimValue = r;

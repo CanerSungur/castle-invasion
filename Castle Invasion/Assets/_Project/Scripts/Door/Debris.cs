@@ -1,4 +1,5 @@
 using UnityEngine;
+using ZestGames;
 
 namespace CastleInvasion
 {
@@ -12,6 +13,8 @@ namespace CastleInvasion
 
         private Vector3 _defaultPos;
 
+        private bool _soundHasPlayer = false;
+
         private void OnEnable()
         {
             _defaultPos = transform.position;
@@ -23,6 +26,15 @@ namespace CastleInvasion
         private void OnDisable()
         {
             transform.position = _defaultPos;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (!_soundHasPlayer)
+            {
+                _soundHasPlayer = true;
+                AudioHandler.PlayAudio(Enums.AudioType.Wood_Impact, 0.5f);
+            }
         }
     }
 }

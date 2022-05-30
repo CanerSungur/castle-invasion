@@ -34,9 +34,9 @@ namespace CastleInvasion
         private Rigidbody _rigidbody;
         #endregion
 
-        #region Script References
         private BatteringRamMovement _movement;
         private BatteringRamAnimController _animationController;
+        private BatteringRamAudio _audioController;
         #endregion
 
         #region Getters
@@ -57,6 +57,8 @@ namespace CastleInvasion
             _movement.Init(this);
             _animationController = GetComponent<BatteringRamAnimController>();
             _animationController.Init(this);
+            _audioController = GetComponent<BatteringRamAudio>();
+            _audioController.Init(this);
 
             Delayer.DoActionAfterDelay(this, 0.5f, SetupRam);
 
@@ -116,7 +118,7 @@ namespace CastleInvasion
 
                 row.Init(this);
 
-                AddSoldiers();
+                AddSoldiers(row);
             }
         }
 
@@ -131,27 +133,29 @@ namespace CastleInvasion
             row.transform.localPosition = new Vector3(0, 0, -(DataManager.CurrentSize - 1) * _distanceBetweenRamRows);
             row.Init(this);
 
-            AddSoldiers();
+            AddSoldiers(row);
         }
 
-        private void AddSoldiers()
+        private void AddSoldiers(BatteringRamRow ramRow)
         {
             // Setup left row soldier
-            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, new Vector3(-15f, 0f, -26f), Quaternion.identity).GetComponent<Ai>();
+            Ai leftAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.LeftRowSoldier, ramRow.transform.position + new Vector3(-15f, 0f, 0f), Quaternion.identity).GetComponent<Ai>();
             leftAi.transform.parent = null;
             if (!leftRowSoldiers.Contains(leftAi))
             {
                 leftRowSoldiers.Add(leftAi);
                 leftAi.SetSoldierRowNumber(leftRowSoldiers.IndexOf(leftAi));
+                leftAi.Init();
             }
 
             // Setup right row soldier
-            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, new Vector3(15f, 0f, -26f), Quaternion.identity).GetComponent<Ai>();
+            Ai rightAi = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.RightRowSoldier, ramRow.transform.position + new Vector3(15f, 0f, 0f), Quaternion.identity).GetComponent<Ai>();
             rightAi.transform.parent = null;
             if (!rightRowSoldiers.Contains(rightAi))
             {
                 rightRowSoldiers.Add(rightAi);
                 rightAi.SetSoldierRowNumber(rightRowSoldiers.IndexOf(rightAi));
+                rightAi.Init();
             }
         }
 
@@ -180,6 +184,8 @@ namespace CastleInvasion
             }
             if (_pullMaxStamina <= 0)
             {
+                AudioEvents.OnPlayDoorHit?.Invoke();
+
                 GameEvents.OnGameEnd?.Invoke(Enums.GameEnd.Fail);
                 PlayerEvents.OnStopStruggle?.Invoke();
             }

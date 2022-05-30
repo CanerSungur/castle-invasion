@@ -5,6 +5,7 @@ namespace ZestGames
     public class DataManager : MonoBehaviour
     {
         public bool DeleteAllData = false;
+        private static bool _levelHasIncreased = false;
 
         public static float TotalMoney { get; private set; }
         public static int StaminaLevel { get; private set; }
@@ -65,7 +66,7 @@ namespace ZestGames
         private void OnDisable()
         {
             UpgradeEvents.OnUpgradeIncome -= IncomeUpgrade;
-            UpgradeEvents.OnUpgradeStamina += StaminaUpgrade;
+            UpgradeEvents.OnUpgradeStamina -= StaminaUpgrade;
             UpgradeEvents.OnUpgradeSize -= SizeUpgrade;
 
             CollectableEvents.OnCollect -= IncreaseTotalMoney;
@@ -104,7 +105,7 @@ namespace ZestGames
         private void UpdateMoneyValue()
         {
             MoneyValue = _coreMoney + _moneyValueIncreaseRate * (IncomeLevel - 1);
-            //Debug.Log("Money Value: " + MoneyValue);
+            Debug.Log("Money Value: " + MoneyValue);
         }
 
         private void UpdateStamina()
@@ -178,9 +179,21 @@ namespace ZestGames
             StaminaLevel = PlayerPrefs.GetInt("StaminaLevel", 1);
             IncomeLevel = PlayerPrefs.GetInt("IncomeLevel", 1);
             SizeLevel = PlayerPrefs.GetInt("SizeLevel", 1);
+            
+            if (_levelHasIncreased)
+            {
+                PlayerPrefs.SetInt("StaminaForCurrentLevel", 1);
+                PlayerPrefs.GetInt("SizeForCurrentLevel", 1);
+                StaminaForCurrentLevel = SizeForCurrentLevel = 1;
+                _levelHasIncreased = false;
+            }
+            else
+            {
+                StaminaForCurrentLevel = PlayerPrefs.GetInt("StaminaForCurrentLevel", 1);
+                SizeForCurrentLevel = PlayerPrefs.GetInt("SizeForCurrentLevel", 1);
+            }
 
-            StaminaForCurrentLevel = PlayerPrefs.GetInt("StaminaForCurrentLevel", 1);
-            SizeForCurrentLevel = PlayerPrefs.GetInt("SizeForCurrentLevel", 1);
+            Debug.Log("Data loaded");
         }
 
         private void SaveData()
@@ -203,9 +216,11 @@ namespace ZestGames
 
         public static void ResetUpgradesForCurrentLevel()
         {
-            PlayerPrefs.DeleteKey("StaminaForCurrentLevel");
-            PlayerPrefs.DeleteKey("SizeForCurrentLevel");
-            PlayerPrefs.Save();
+            Debug.Log("Deleting current level info...");
+            _levelHasIncreased = true;
+            //PlayerPrefs.DeleteKey("StaminaForCurrentLevel");
+            //PlayerPrefs.DeleteKey("SizeForCurrentLevel");
+            //PlayerPrefs.Save();
         }
     }
 }

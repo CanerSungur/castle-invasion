@@ -15,13 +15,13 @@ namespace CastleInvasion
             _animator = GetComponent<Animator>();
 
             PlayerEvents.OnRamPulled += Pulled;
-            PlayerEvents.OnHitWall += Hit;
+            PlayerEvents.OnHitDoor += Hit;
         }
 
         private void OnDisable()
         {
             PlayerEvents.OnRamPulled -= Pulled;
-            PlayerEvents.OnHitWall -= Hit;
+            PlayerEvents.OnHitDoor -= Hit;
         }
 
         private void Hit() => _animator.SetTrigger(_hitID);

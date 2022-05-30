@@ -49,17 +49,18 @@ namespace ZestGames
             _ai.OnDie += Die;
             _ai.OnWin += Win;
             PlayerEvents.OnRamPulled += Pull;
-            PlayerEvents.OnHitWall += HitWall;
+            PlayerEvents.OnHitDoor += HitWall;
             PlayerEvents.OnStartStruggle += StruggledPullSpeed;
             PlayerEvents.OnStopStruggle += DefaultPullSpeed;
         }
 
         private void OnDisable()
         {
+            if (!_ai) return;
             _ai.OnDie -= Die;
             _ai.OnWin -= Win;
             PlayerEvents.OnRamPulled -= Pull;
-            PlayerEvents.OnHitWall -= HitWall;
+            PlayerEvents.OnHitDoor -= HitWall;
             PlayerEvents.OnStartStruggle -= StruggledPullSpeed;
             PlayerEvents.OnStopStruggle -= DefaultPullSpeed;
         }

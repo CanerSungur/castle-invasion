@@ -16,6 +16,8 @@ namespace CastleInvasion
         public Transform LeftTransform => _leftTransform;
         public Transform RightTransform => _rightTransform;
 
+        private bool _hitGround = false;
+
         public void Init(BatteringRam batteringRam)
         {
             _batteringRam = batteringRam;
@@ -39,14 +41,21 @@ namespace CastleInvasion
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (GameManager.GameState == Enums.GameState.GameEnded && !_hitGround)
+            {
+                _hitGround = true;
+                AudioHandler.PlayAudio(Enums.AudioType.Wood_Impact, 0.7f);
+            }
+
             if (collision.gameObject.TryGetComponent(out Door door) && !door.GotHit && GameManager.GameState != Enums.GameState.GameEnded)
             {
                 door.GetHit(_batteringRam.Hit());
-                PlayerEvents.OnHitWall?.Invoke();
+                PlayerEvents.OnHitDoor?.Invoke();
                 CameraManager.OnShakeCam?.Invoke();
                 CollectableEvents.OnCollect?.Invoke(DataManager.MoneyValue * _batteringRam.Damage);
                 UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney);
                 FeedbackEvents.OnGiveMoneyFeedback?.Invoke(DataManager.MoneyValue * _batteringRam.Damage);
+                AudioEvents.OnPlayDoorHit?.Invoke();
             }
         }
 

@@ -9,6 +9,8 @@ namespace ZestGames
     {
         public enum Side { Left, Right }
         private bool _firstInitialization;
+        private bool _isAssignedToRam = false;
+        public bool IsAssignedToRam => _isAssignedToRam;
 
         #region COMPONENTS
 
@@ -77,9 +79,9 @@ namespace ZestGames
 
         #endregion
 
-        private void Init()
+        public void Init()
         {
-            _firstInitialization = true;
+            _isAssignedToRam = _firstInitialization = true;
             IsDead = false;
             Target = null;
             if (useAcceleration)
@@ -98,26 +100,37 @@ namespace ZestGames
             OnSetTarget += SetTarget;
             GameEvents.OnGameEnd += HandleGameEnd;
 
-            Delayer.DoActionAfterDelay(this, 1f, () => {
-                if (currentSide == Side.Left)
-                    Target = _batteringRam.Rows[_soldierRowNumber].LeftTransform;
-                else if (currentSide == Side.Right)
-                    Target = _batteringRam.Rows[_soldierRowNumber].RightTransform;
+            //Delayer.DoActionAfterDelay(this, 0.5f, () =>
+            //{
+            //    if (currentSide == Side.Left)
+            //        Target = _batteringRam.Rows[_soldierRowNumber].LeftTransform;
+            //    else if (currentSide == Side.Right)
+            //        Target = _batteringRam.Rows[_soldierRowNumber].RightTransform;
 
-                OnSetTarget?.Invoke(Target);
-            });
+            //    OnSetTarget?.Invoke(Target);
+            //});
+
+            if (currentSide == Side.Left)
+                Target = _batteringRam.Rows[_soldierRowNumber].LeftTransform;
+            else if (currentSide == Side.Right)
+                Target = _batteringRam.Rows[_soldierRowNumber].RightTransform;
+
+            OnSetTarget?.Invoke(Target);
         }
 
-        private void OnEnable()
-        {
-            Init();
-        }
+        //private void OnEnable()
+        //{
+        //    Init();
+        //}
 
         private void OnDisable()
         {
+            if (_isAssignedToRam)
+            {
+                OnSetTarget -= SetTarget;
+                GameEvents.OnGameEnd -= HandleGameEnd;
+            }
             CharacterTracker.RemoveAi(this);
-            OnSetTarget -= SetTarget;
-            GameEvents.OnGameEnd -= HandleGameEnd;
         }
 
         private void Update()

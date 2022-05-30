@@ -14,7 +14,7 @@ namespace CastleInvasion
 
         private float _startingPoint;
         private float _targetPullPoint;
-        private float _pullRate = 0.25f;
+        private float _pullRate = 1f;
 
         private float _currentPullTime;
         private readonly float _defaultPullTime = 0.5f;
@@ -70,8 +70,9 @@ namespace CastleInvasion
             //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - _pullRate);
 
             //transform.DOKill();
-            transform.DOMoveZ(_targetPullPoint, _currentPullTime);
+            transform.DOMoveZ(_targetPullPoint, _currentPullTime).SetEase(Ease.OutFlash);
             PlayerEvents.OnRamPulled?.Invoke();
+            AudioEvents.OnPlayRamCreak?.Invoke();
         }
 
         private void Release()

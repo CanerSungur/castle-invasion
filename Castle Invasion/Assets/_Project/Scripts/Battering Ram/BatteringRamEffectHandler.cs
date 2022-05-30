@@ -10,12 +10,12 @@ namespace CastleInvasion
 
         private void Start()
         {
-            PlayerEvents.OnHitWall += SmokeParticles;
+            PlayerEvents.OnHitDoor += SmokeParticles;
         }
 
         private void OnDisable()
         {
-            PlayerEvents.OnHitWall -= SmokeParticles;
+            PlayerEvents.OnHitDoor -= SmokeParticles;
         }
 
         private void SmokeParticles()

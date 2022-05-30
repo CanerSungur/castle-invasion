@@ -4144,6 +4144,7 @@ GameObject:
   - component: {fileID: 433652019}
   - component: {fileID: 433652021}
   - component: {fileID: 433652020}
+  - component: {fileID: 433652022}
   m_Layer: 0
   m_Name: Fog_BehindFirstDoor
   m_TagString: Untagged
@@ -4214,6 +4215,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 433652018}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &433652022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433652018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408adc856f26b724b8dd9039344e90d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &449484769
 Mesh:
   m_ObjectHideFlags: 0
@@ -14270,7 +14283,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 0.46220303, y: 1}
+    m_SensorSize: {x: 0.46205357, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -16393,7 +16406,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 0.46220303, y: 1}
+    m_SensorSize: {x: 0.46205357, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -17255,7 +17268,7 @@ PrefabInstance:
     - target: {fileID: 1217597399, guid: eb54b7f316dc5a9408617a8aafc890b8, type: 3}
       propertyPath: doorTransform
       value: 
-      objectReference: {fileID: 530576002}
+      objectReference: {fileID: 8448302366303572250}
     - target: {fileID: 1124688366865923144, guid: eb54b7f316dc5a9408617a8aafc890b8, type: 3}
       propertyPath: dollyCam
       value: 

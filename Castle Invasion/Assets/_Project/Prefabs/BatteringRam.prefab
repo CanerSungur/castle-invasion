@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8158463673014841964}
   - component: {fileID: 8158463673014841954}
   - component: {fileID: 8158463673014841952}
+  - component: {fileID: 7515721756584430779}
   m_Layer: 0
   m_Name: BatteringRam
   m_TagString: Untagged
@@ -66,7 +67,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2ca40caed710243abfb91f8c45cc33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rowPrefab: {fileID: 2877673011915780695, guid: 7173c0048f7380d49bc39fe35501c97a, type: 3}
   door: {fileID: 0}
 --- !u!114 &8158463673014841964
 MonoBehaviour:
@@ -105,3 +105,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smokePS: {fileID: 179477820332501499, guid: e068305a7f8787e419a714e61f48ac84, type: 3}
+--- !u!114 &7515721756584430779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158463673014841966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa5eb5a2c16a28341bd0c87a5e8ef334, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

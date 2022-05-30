@@ -35,6 +35,7 @@ namespace ZestGames
 
         private void OnDisable()
         {
+            if (!_ai) return;
             _ai.OnSetTarget -= SetTarget;
             _ai.OnDie -= () => _agent.enabled = false;
             _ai.OnWin -= Cheer;
@@ -56,12 +57,17 @@ namespace ZestGames
             if (_ai.FirstInitialization)
             {
                 _agent.SetDestination(_currentTarget.position);
+                Navigation.LookAtTarget(transform, _currentTarget.position);
 
                 if (Operation.IsTargetReached(transform, _currentTarget.position, 0.1f) && !_targetReached)
                 {
                     _targetReached = true;
                     _ai.CancelFirstInitialization();
+                    transform.rotation = Quaternion.identity;
+                    _ai.IsMoving = false;
                 }
+                else
+                    _ai.IsMoving = true;
             }
             else
                 transform.position = _currentTarget.position;

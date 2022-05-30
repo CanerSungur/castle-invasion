@@ -20,7 +20,7 @@ namespace CastleInvasion
 
         private void ActivateFeedback(float lastEarnedMoney)
         {
-            MoneyFeedback moneyFeedback = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.MoneyFeedback, doorTransform.position + (Vector3.up * 1.75f) - (doorTransform.forward * 1f), Quaternion.identity).GetComponent<MoneyFeedback>();
+            MoneyFeedback moneyFeedback = ObjectPooler.Instance.SpawnFromPool(Enums.PoolStamp.MoneyFeedback, doorTransform.position + (Vector3.up * 1.75f) + (doorTransform.forward * 3.2f), Quaternion.identity).GetComponent<MoneyFeedback>();
             moneyFeedback.SetMoneyText(lastEarnedMoney);
             Delayer.DoActionAfterDelay(this, 2f, () => moneyFeedback.gameObject.SetActive(false));
         }
