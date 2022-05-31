@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedAppIndex: 0
   clientTokens:
-  - 
+  - 107389618afe9a059239dc82be207902
   appIds:
-  - 0
+  - 580818710012487
   appLabels:
-  - App Name
+  - Castle Invasion
   cookie: 1
   logging: 1
   status: 1

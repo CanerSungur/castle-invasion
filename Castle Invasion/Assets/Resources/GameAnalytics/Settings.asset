@@ -26,21 +26,21 @@ MonoBehaviour:
   UserMessagesFailed: 0
   CustomArea: 
   gameKey:
-  - 
+  - 1dadd54ecb2a53c74c9c673e9bc6b28d
   secretKey:
-  - 
+  - 8fd49c644409f527b9ca0dbfb59c67e885bb8232
   Build:
-  - 0.1
+  - 1.0
   SelectedPlatformOrganization:
-  - 
+  - Udo Games Oyun Yazilim Anonim Sirketi
   SelectedPlatformStudio:
-  - 
+  - Udo Games
   SelectedPlatformGame:
-  - 
-  SelectedPlatformGameID: ffffffff
-  SelectedOrganization: 00000000
-  SelectedStudio: 00000000
-  SelectedGame: 00000000
+  - Castle Invasion
+  SelectedPlatformGameID: 771b0300
+  SelectedOrganization: 01000000
+  SelectedStudio: 01000000
+  SelectedGame: 01000000
   NewVersion: 
   Changes: 
   SignUpOpen: 0
