@@ -5,6 +5,10 @@ namespace ZestGames
 {
     public class TouchToStart : MonoBehaviour, IPointerDownHandler
     {
-        public void OnPointerDown(PointerEventData eventData) => GameEvents.OnGameStart?.Invoke();
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            GameEvents.OnGameStart?.Invoke();
+            GameAnalyticsEvent.OnGameStart?.Invoke();
+        }
     }
 }

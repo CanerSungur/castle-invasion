@@ -133,6 +133,8 @@ GameObject:
   m_Component:
   - component: {fileID: 253736871}
   - component: {fileID: 253736872}
+  - component: {fileID: 253736874}
+  - component: {fileID: 253736873}
   m_Layer: 0
   m_Name: InitManager
   m_TagString: Untagged
@@ -167,3 +169,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseSceneTransition: 0
+--- !u!114 &253736873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253736870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b0a873a2ada1f4d86895a6d5d3720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &253736874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253736870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 494dea57ceb8b5a44a4701bdcceb6f3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

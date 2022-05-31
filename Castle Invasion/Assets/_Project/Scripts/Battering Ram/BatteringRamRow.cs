@@ -56,6 +56,12 @@ namespace CastleInvasion
                 UiEvents.OnUpdateCollectableText?.Invoke(DataManager.TotalMoney);
                 FeedbackEvents.OnGiveMoneyFeedback?.Invoke(DataManager.MoneyValue * _batteringRam.Damage);
                 AudioEvents.OnPlayDoorHit?.Invoke();
+
+                if (_batteringRam.HitTryCountForThisLevel >= DataManager.MaxTryPerLevel && GameManager.GameState == Enums.GameState.Started)
+                {
+                    GameEvents.OnGameEnd?.Invoke(Enums.GameEnd.Fail);
+                    PlayerEvents.OnStopStruggle?.Invoke();
+                }
             }
         }
 

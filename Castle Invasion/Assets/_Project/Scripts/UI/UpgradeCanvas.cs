@@ -60,12 +60,25 @@ namespace CastleInvasion
             CheckForMoneySufficiency();
         }
 
-        private void UpgradeStamina() => UpgradeEvents.OnUpgradeStamina?.Invoke();
-        private void UpgradeIncome() => UpgradeEvents.OnUpgradeIncome?.Invoke();
-        private void UpgradeSpeed() => UpgradeEvents.OnUpgradeSize?.Invoke();
+        private void UpgradeStamina()
+        {
+            UpgradeEvents.OnUpgradeStamina?.Invoke();
+            GameAnalyticsEvent.OnUpgradeStamina?.Invoke(DataManager.StaminaLevel);
+        }
+        private void UpgradeIncome()
+        {
+            UpgradeEvents.OnUpgradeIncome?.Invoke();
+            GameAnalyticsEvent.OnUpgradeIncome?.Invoke(DataManager.IncomeLevel);
+        }
+        private void UpgradeSize()
+        {
+            UpgradeEvents.OnUpgradeSize?.Invoke();
+            GameAnalyticsEvent.OnUpgradeSize?.Invoke(DataManager.SizeLevel);
+        }
+
         private void StaminaUpgradeClicked() => staminaUpgradeButton.TriggerClick(UpgradeStamina);
         private void IncomeUpgradeClicked() => incomeUpgradeButton.TriggerClick(UpgradeIncome);
-        private void SpeedUpgradeClicked() => sizeUpgradeButton.TriggerClick(UpgradeSpeed);
+        private void SpeedUpgradeClicked() => sizeUpgradeButton.TriggerClick(UpgradeSize);
         private void CheckForMoneySufficiency()
         {
             staminaUpgradeButton.interactable = DataManager.TotalMoney >= DataManager.StaminaCost;

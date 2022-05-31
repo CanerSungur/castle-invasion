@@ -17,6 +17,7 @@ namespace ZestGames
         public static float MaxStamina { get; private set; }
         public static float CurrentSize { get; private set; }
         public static int CurrentDamage => (int)(CurrentSize * _coreDamage);
+        public static int MaxTryPerLevel => _maxTryPerLevel;
 
         // \[ Price = BaseCost \times Multiplier ^{(\#\:Owned)} \]
         public static int StaminaCost => (int)(_upgradeCost * Mathf.Pow(_upgradeCostIncreaseRate, StaminaLevel));
@@ -28,12 +29,13 @@ namespace ZestGames
         private readonly float _coreStamina = 100f;
         private readonly int _coreSize = 5;
         private static readonly int _coreDamage = 1;
+        private static readonly int _maxTryPerLevel = 4;
 
         // Increase data
         private static readonly float _upgradeCost = 20;
         private static readonly float _upgradeCostIncreaseRate = 1.2f;
         private readonly float _moneyValueIncreaseRate = 1.5f;
-        private readonly float _staminaIncreaseRate = 40f;
+        private readonly float _staminaIncreaseRate = 20f;
         private readonly int _sizeIncreaseRate = 1;
 
         [Header("-- STRUGGLE LIMIT --")]
@@ -50,7 +52,7 @@ namespace ZestGames
             UpdateStamina();
             UpdateSize();
 
-            TotalMoney = 10000;
+            //TotalMoney = 10000;
 
             // Calculate StruggleLimit
             PullStaminaCost = pullStaminaCost;

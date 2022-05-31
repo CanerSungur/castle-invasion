@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 5491084403859615927}
   - component: {fileID: 1124688366865923144}
   - component: {fileID: 1217597399}
+  - component: {fileID: 8264546428359237239}
+  - component: {fileID: 2750243191976289951}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -138,3 +140,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorTransform: {fileID: 0}
+--- !u!114 &8264546428359237239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5491084403859615924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408ec91724b1c5b4db41ef281780880f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2750243191976289951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5491084403859615924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a83d940ddce2e4fa3cc189ec4a9961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

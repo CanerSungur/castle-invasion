@@ -34,7 +34,7 @@ namespace ZestGames
         private readonly float _defaultPullSpeed = 1f;
         private readonly float _struggledPullSPeed = 0.75f;
 
-        private bool _ramIsReleased => _ai.BatteringRam.Movement.IsReleased;
+        private bool _ramIsReleased => _ai.BatteringRam.Movement.IsReleased && GameManager.GameState == Enums.GameState.Started;
 
         public void Init(Ai ai)
         {

@@ -24,6 +24,7 @@ namespace CastleInvasion
         public int StrugglePullCount { get; private set; }
         public int PullCount { get; private set; }
         public bool DoorIsBroken { get; private set; }
+        public int HitTryCountForThisLevel { get; private set; }
 
         // Struggle after first hit
         private readonly float _defaultLimitDecreaseRate = 0.5f;
@@ -66,7 +67,7 @@ namespace CastleInvasion
             _pullStaminaCost = DataManager.PullStaminaCost;
             _struggleLimit = DataManager.StruggleLimit;
             _pullMaxStamina = (int)DataManager.MaxStamina;
-            StrugglePullCount = PullCount = 0;
+            StrugglePullCount = PullCount = HitTryCountForThisLevel = 0;
 
             PlayerEvents.OnRamPulled += IncreasePullCount;
             PlayerEvents.OnRamReleased += ResetPullCount;
@@ -91,6 +92,7 @@ namespace CastleInvasion
         public int Hit()
         {
             UpdateLimits();
+            HitTryCountForThisLevel++;
             _hitCount++;
 
             ResetPull();
