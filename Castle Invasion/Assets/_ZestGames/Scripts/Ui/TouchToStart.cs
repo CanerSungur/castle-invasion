@@ -8,7 +8,7 @@ namespace ZestGames
         public void OnPointerDown(PointerEventData eventData)
         {
             GameEvents.OnGameStart?.Invoke();
-            GameAnalyticsEvent.OnGameStart?.Invoke();
+            GameAnalyticsEvent.OnGameStart?.Invoke(LevelHandler.Level);
         }
     }
 }

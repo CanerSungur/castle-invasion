@@ -70,12 +70,12 @@ namespace ZestGames
             if (GameEnd == Enums.GameEnd.Success)
             {
                 GameEvents.OnLevelSuccess?.Invoke();
-                GameAnalyticsEvent.OnLevelSuccess?.Invoke();
+                GameAnalyticsEvent.OnLevelSuccess?.Invoke(LevelHandler.Level);
             }
             else if (GameEnd == Enums.GameEnd.Fail)
             {
                 GameEvents.OnLevelFail?.Invoke();
-                GameAnalyticsEvent.OnLevelFail?.Invoke();
+                GameAnalyticsEvent.OnLevelFail?.Invoke(LevelHandler.Level);
             }
         }
     }

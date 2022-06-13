@@ -56,7 +56,7 @@ namespace ZestGames
 
     public static class GameAnalyticsEvent
     {
-        public static Action OnGameStart, OnLevelFail, OnLevelSuccess;
+        public static Action<int> OnGameStart, OnLevelFail, OnLevelSuccess;
         public static Action<int> OnUpgradeStamina, OnUpgradeIncome, OnUpgradeSize;
     }
 }
